@@ -42,6 +42,30 @@ const ChatSchema = new mongoose.Schema({
 });
 const ChatModel = mongoose.model("chats", ChatSchema);
 
+app.use(express.json());
+
+app.post('/add-contact', async (req, res) => {
+  try {
+    const { username, contactName } = req.body;
+    
+    // Find the user and push the new contact into their contacts array
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { username: username.toLowerCase().trim() },
+      { $addToSet: { contacts: contactName.toLowerCase().trim() } }, // $addToSet prevents duplicates
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ success: true, contacts: updatedUser.contacts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);
   socket.on("login_user", async (username, callback) => {
