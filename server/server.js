@@ -122,12 +122,10 @@ socket.on("login_user", async (username, callback) => {
       io.emit("update_online_users", Array.from(onlineUsers.keys()));
     });
   });
-  // Handle adding an emoji reaction
+ // Handle adding an emoji reaction globally
   socket.on('send_reaction', (reactionData) => {
-    // reactionData = { chatId, messageId, reactorName, emoji }
-    
-    // Broadcast the reaction to everyone in that specific chat room
-    io.to(reactionData.chatId).emit('receive_reaction', {
+    // Broadcast directly to everyone online
+    io.emit('receive_reaction', {
       messageId: reactionData.messageId,
       reactorName: reactionData.reactorName,
       emoji: reactionData.emoji
