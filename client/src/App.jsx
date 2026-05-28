@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import './App.css';
+import UniversalProfile from './UniversalProfile';
 
 // Establishes the real-time websocket link to our backend
 const socket = io.connect('https://chat-app-backend-osyn.onrender.com');
@@ -17,6 +18,20 @@ function App() {
   const messagesEndRef = useRef(null);
   const [typingStatus, setTypingStatus] = useState("");
   const [onlineList, setOnlineList] = useState([]);
+  // --- UNIVERSAL PROFILE STATES ---
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [myUniversalProfile, setMyUniversalProfile] = useState(() => {
+    const savedProfile = localStorage.getItem('universal_chat_profile');
+    if (savedProfile) {
+      try { return JSON.parse(savedProfile); } catch (e) { console.error(e); }
+    }
+    return {
+      displayName: 'Anonymous User',
+      bio: 'Hey there! I am using this chat app.',
+      statusEmoji: '💬'
+    };
+  });
+  // ---------------------------------
 
 useEffect(() => {
     // 1. Listen for the backend confirming a chat link is active
@@ -209,6 +224,14 @@ return (
   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
     <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '700', color: 'var(--text-main)', letterSpacing: '-0.5px' }}>Chats</h2>
   </div>
+  <button 
+      type="button"
+      onClick={() => setIsProfileModalOpen(true)}
+      className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-xs font-semibold rounded-lg border border-zinc-800 transition text-zinc-300 cursor-pointer flex items-center gap-1.5"
+    >
+      <span>{myUniversalProfile.statusEmoji}</span>
+      <span>Profile</span>
+    </button>
   <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-muted)' }}>Welcome back to your workspace</p>
 </div>
 
@@ -442,6 +465,17 @@ return (
           </div>
         </div>
       )}
+      {/* Universal WhatsApp-style Profile Popup Modal */}
+      <UniversalProfile 
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        currentProfile={myUniversalProfile}
+        onSave={(updatedProfile) => {
+          setMyUniversalProfile(updatedProfile);
+          localStorage.setItem('universal_chat_profile', JSON.stringify(updatedProfile));
+          setIsProfileModalOpen(false);
+        }}
+      />
     </div>
   );
 }
