@@ -3,6 +3,8 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -21,6 +23,8 @@ const MONGO_URI = "mongodb://Calli-Chat:Callitus12345@ac-bv4iqz7-shard-00-00.apg
 mongoose.connect(MONGO_URI)
   .then(() => console.log("Connected to Cloud Database!"))
   .catch((err) => console.log("Database connection error:", err));
+  // Map to monitor real-time connected user socket sessions
+const onlineUsers = new Map();
 
 // 2. Message data structure
 const MessageSchema = new mongoose.Schema({
@@ -54,6 +58,33 @@ app.post('/add-contact', async (req, res) => {
       { $addToSet: { contacts: contactName.toLowerCase().trim() } }, // $addToSet prevents duplicates
       { new: true }
     );
+    // --- Paste this right below your /add-contact route ---
+app.post('/api/ai/smart-replies', (req, res) => {
+  try {
+    const { conversationHistory } = req.body;
+    
+    const lastMessage = conversationHistory && conversationHistory.length > 0 
+      ? conversationHistory[conversationHistory.length - 1].toLowerCase() 
+      : "";
+
+    let mockReplies = ["Cool!", "Sounds good", "Awesome!"]; 
+
+    if (lastMessage.includes("hello") || lastMessage.includes("hi")) {
+      mockReplies = ["Hey there!", "Hello!", "How's it going?"];
+    } else if (lastMessage.includes("bye") || lastMessage.includes("love")) {
+      mockReplies = ["Bye!", "Talk to you later", "Take care ❤️"];
+    } else if (lastMessage.includes("where")) {
+      mockReplies = ["On my way!", "At home", "Not sure yet"];
+    } else if (lastMessage.includes("how are you")) {
+      mockReplies = ["Doing well!", "Good, you?", "Pretty busy"];
+    }
+
+    res.json({ replies: mockReplies });
+  } catch (error) {
+    console.error("Mock Server Error:", error);
+    res.status(500).json({ error: "Failed to load suggestions" });
+  }
+});
 
     if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
@@ -68,18 +99,46 @@ app.post('/add-contact', async (req, res) => {
 
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);
-  socket.on("login_user", async (username, callback) => {
-    // 💡 FORCE TO LOWERCASE AND REMOVE SPACES
-    const cleanUsername = username.toLowerCase().trim(); 
+socket.on("login_user", async (username, callback) => {
+    // FORCE BOTH NAMES TO LOWERCASE AND REMOVE SPACES
+    const cleanUsername = username.toLowerCase().trim();
+
+    // 1. Add user to online tracker map and broadcast update live
+    onlineUsers.set(cleanUsername, socket.id);
+    io.emit("update_online_users", Array.from(onlineUsers.keys()));
 
     let user = await UserModel.findOne({ username: cleanUsername });
     if (!user) {
-        user = new UserModel({ username: cleanUsername, contacts: [] });
-        await user.save();
+      user = new UserModel({ username: cleanUsername, contacts: [] });
+      await user.save();
     }
+
     socket.join(cleanUsername);
     callback({ userId: user._id.toString() });
-});
+
+    // 2. Clear user out automatically when they close their tab or disconnect
+    socket.on("disconnect", () => {
+      onlineUsers.delete(cleanUsername);
+      io.emit("update_online_users", Array.from(onlineUsers.keys()));
+    });
+  });
+  // Handle adding an emoji reaction
+  socket.on('send_reaction', (reactionData) => {
+    // reactionData = { chatId, messageId, reactorName, emoji }
+    
+    // Broadcast the reaction to everyone in that specific chat room
+    io.to(reactionData.chatId).emit('receive_reaction', {
+      messageId: reactionData.messageId,
+      reactorName: reactionData.reactorName,
+      emoji: reactionData.emoji
+    });
+  });
+  socket.on('mark_as_read', ({ chatId }) => {
+      io.to(chatId).emit('messages_updated_status', {
+          chatId: chatId,
+          status: 'read'
+      });
+  });
 
  socket.on("access_chat", async ({ currentUsername, targetUsername }) => {
     try {
@@ -131,6 +190,32 @@ socket.on("send_message", async (data) => {
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.id}`);
     });
+});
+app.post('/api/ai/smart-replies', (req, res) => {
+  try {
+    const { conversationHistory } = req.body;
+    
+    const lastMessage = conversationHistory && conversationHistory.length > 0 
+      ? conversationHistory[conversationHistory.length - 1].toLowerCase() 
+      : "";
+
+    let mockReplies = ["Cool!", "Sounds good", "Awesome!"]; 
+
+    if (lastMessage.includes("hello") || lastMessage.includes("hi")) {
+      mockReplies = ["Hey there!", "Hello!", "How's it going?"];
+    } else if (lastMessage.includes("bye") || lastMessage.includes("love")) {
+      mockReplies = ["Bye!", "Talk to you later", "Take care ❤️"];
+    } else if (lastMessage.includes("where")) {
+      mockReplies = ["On my way!", "At home", "Not sure yet"];
+    } else if (lastMessage.includes("how are you")) {
+      mockReplies = ["Doing well!", "Good, you?", "Pretty busy"];
+    }
+
+    res.json({ replies: mockReplies });
+  } catch (error) {
+    console.error("Mock Server Error:", error);
+    res.status(500).json({ error: "Failed to load suggestions" });
+  }
 });
 
 const PORT = process.env.PORT || 4500;
