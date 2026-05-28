@@ -285,22 +285,33 @@ return (
               marginBottom: '12px',
               maxWidth: '65%'
                   }} >
-            {/* Modern Floating Hover Picker */}
-<div className="emoji-picker-popover">
-      {['👍', '❤️', '😂', '🔥', '😮'].map((emoji) => (
-        <button
-          key={emoji}
-          onClick={() => socket.emit('send_reaction', {
-            chatId: currentRoomId,
-            messageId: content.id || content._id || idx.toString(),
-            reactorName: username,
-            emoji
-          })}
-        >
-          {emoji}
-        </button>
-      ))}
-    </div>
+ {/* Modern Floating Hover Picker */}
+  <div className="emoji-picker-popover">
+    {['👍', '❤️', '😂', '🔥', '😮'].map((emoji) => (
+      <button 
+        key={emoji} 
+        onClick={() => {
+          // Use 'content' since that is what your map loop names each message object!
+          const msgId = content._id || content.id;
+          
+          if (!msgId) {
+            console.error("Missing unique message ID on this item!");
+            return;
+          }
+
+          console.log("Sending reaction for message:", msgId, emoji);
+
+          socket.emit('send_reaction', { 
+            messageId: msgId, 
+            reactorName: username || 'Anonymous', 
+            emoji: emoji 
+          });
+        }}
+      >
+        {emoji}
+      </button>
+    ))}
+  </div>
           
             {/* 1. Cloudinary Images */}
             {isAnImage ? (
