@@ -1,0 +1,500 @@
+/* ==========================================================================
+   GLOBAL TELEGRAM/WHATSAPP INSPIRED MASTER RESET
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Premium Dark Palette */
+  --bg-main: #0b141a;          /* Deep dark luxury background */
+  --bg-sidebar: #111b21;       /* WhatsApp-like slate sidebar */
+  --bg-chat: #0b141a;
+  --panel-header: #202c33;     /* Clear contrast header zones */
+  
+  /* Vibrant Accent Colors */
+  --primary: #00a884;          /* WhatsApp Teal Green */
+  --primary-hover: #008f72;
+  --telegram-blue: #2481cc;    /* Telegram Accent Blue */
+  
+  /* Typography & Lines */
+  --text-main: #e9edef;        /* Crisp, clear text */
+  --text-muted: #8696a0;       /* Perfect low-contrast text */
+  --border-color: #222e35;     /* Ultra-thin clean dividers */
+
+  /* Chat Bubbles */
+  --bubble-me: #005c4b;        /* WhatsApp Dark Green bubble */
+  --bubble-them: #202c33;      /* WhatsApp Dark Gray bubble */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   APP CONTAINER & SIDEBAR SYSTEM
+   ========================================================================== */
+.chat-layout, .chat-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.chat-sidebar, .sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 340px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.chat-window {
+  flex: 1;
+  background-color: var(--bg-chat);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+
+/* ==========================================================================
+   PREMIUM "ADD CONTACT" ROW DESIGN
+   ========================================================================== */
+.chat-sidebar form, 
+.add-contact-form {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 10px !important;
+  padding: 14px 16px !important;
+  width: 100% !important;
+  background-color: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chat-sidebar form input,
+.add-contact-input {
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding: 10px 16px !important;
+  background-color: #202c33 !important; /* Inset contrast search style */
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  color: var(--text-main) !important;
+  font-size: 14px !important;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.chat-sidebar form input:focus,
+.add-contact-input:focus {
+  border-color: var(--primary) !important;
+  background-color: #2a3942 !important;
+}
+
+.chat-sidebar form button,
+.add-contact-button {
+  flex-shrink: 0 !important;
+  padding: 10px 20px !important;
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+  transition: all 0.15s ease !important;
+}
+
+.chat-sidebar form button:hover,
+.add-contact-button:hover {
+  background-color: var(--primary-hover) !important;
+  transform: translateY(-1px);
+}
+
+.chat-sidebar form button:active,
+.add-contact-button:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   PREMIUM MODERN CHAT FOOTER & SEND BAR
+   ========================================================================== */
+.chat-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background-color: var(--panel-header);
+  width: 100%;
+}
+
+.chat-footer input {
+  flex: 1;
+  min-width: 0;
+  background-color: #2a3942;
+  border: 1px solid transparent;
+  color: var(--text-main);
+  padding: 11px 18px;
+  border-radius: 22px; /* Pill-shaped like modern apps */
+  outline: none;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.chat-footer input:focus {
+  border-color: rgba(255,255,255,0.1);
+}
+
+.chat-footer button,
+.send-button {
+  background-color: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%; /* Perfect circle WhatsApp style button */
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 14px;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.chat-footer button:hover,
+.send-button:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   HIGH-END LOGIN / JOIN PORTAL DESIGN
+   ========================================================================== */
+.joinChatContainer, .login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at top, #1c2e38 0%, #0b141a 100%);
+  padding: 20px;
+}
+
+.joinChatContainer h3, .login-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
+}
+
+.joinChatContainer input, .login-input {
+  width: 100%;
+  max-width: 320px;
+  padding: 14px 18px;
+  background-color: #111b21;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-main);
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.joinChatContainer input:focus, .login-input:focus {
+  border-color: var(--telegram-blue);
+}
+
+.joinChatContainer button, .login-button {
+  width: 100%;
+  max-width: 320px;
+  padding: 14px;
+  background-color: var(--telegram-blue); /* Sleek Telegram Blue for authentication */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(36, 129, 204, 0.25);
+  transition: all 0.2s ease;
+}
+
+.joinChatContainer button:hover, .login-button:hover {
+  background-color: #1d72b8;
+  box-shadow: 0 6px 16px rgba(36, 129, 204, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   MESSAGE CHAT BUBBLE ENGINE
+   ========================================================================== */
+.chat-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  width: 100%;
+  background-color: #0b141a;
+}
+
+.message-bubble {
+  display: block;
+  max-width: 65%;
+  padding: 8px 14px 10px 14px;
+  line-height: 1.45;
+  word-break: break-word;
+  font-size: 15px;
+  margin: 4px 0;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+}
+
+.message-bubble.me {
+  background-color: var(--bubble-me);
+  color: #e9edef;
+  align-self: flex-end;
+  border-radius: 8px 0px 8px 8px; /* Classic message tail-cut look */
+}
+
+.message-bubble.them {
+  background-color: var(--bubble-them);
+  color: #e9edef;
+  align-self: flex-start;
+  border-radius: 0px 8px 8px 8px;
+}
+
+/* ==========================================================================
+   CLEAN MOBILE RESPONSIVE ADAPTATION ENGINE
+   ========================================================================== */
+@media (max-width: 768px) {
+  .chat-layout, .chat-container {
+    flex-direction: column !important;
+  }
+
+  .chat-sidebar, .sidebar {
+    display: flex !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .message-bubble {
+    max-width: 85% !important;
+  }
+}
+/* ==========================================================================
+   MATCHING CLASS HOOKS FOR APP.JSX LOGIN VIEW
+   ========================================================================== */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at top, #1c2e38 0%, #0b141a 100%);
+  padding: 20px;
+}
+
+.login-card {
+  background-color: #111b21;
+  padding: 30px 24px;
+  border-radius: 16px;
+  border: 1px solid #222e35;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.login-logo svg {
+  color: #2481cc; /* Telegram-style blue logo icon */
+  margin-bottom: 8px;
+}
+
+.login-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #e9edef;
+  margin: 10px 0 6px 0;
+}
+
+.login-card p {
+  color: #8696a0;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+
+/* Styled login text box */
+.login-form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #202c33;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #e9edef;
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.login-form-group input:focus {
+  border-color: #2481cc;
+  background-color: #2a3942;
+}
+
+/* Styled clean submit login button */
+.login-form-group button {
+  width: 100%;
+  padding: 14px;
+  background-color: #2481cc; /* Elegant Telegram blue action color */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(36, 129, 204, 0.25);
+  transition: all 0.2s ease;
+}
+
+.login-form-group button:hover {
+  background-color: #1d72b8;
+  box-shadow: 0 6px 16px rgba(36, 129, 204, 0.4);
+  transform: translateY(-1px);
+}
+/* ==========================================================================
+   PREMIUM SIDEBAR TYPOGRAPHY & HEADER POLISH
+   ========================================================================== */
+.sidebar-header {
+  padding: 20px 16px 8px 16px;
+  background-color: var(--bg-sidebar);
+}
+
+.sidebar-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.sidebar-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+}
+
+/* Elegant status badge for the logged-in user */
+.user-badge {
+  background-color: rgba(0, 168, 132, 0.1);
+  color: var(--primary);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(0, 168, 132, 0.2);
+}
+
+.welcome-text {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+/* 1. Base Message Bubble Adjustments */
+.message-bubble.me, 
+.message-bubble.them {
+  position: relative !important; /* Ensures absolutely positioned elements anchor correctly */
+}
+
+/* 2. Hidden Floating Hover Emoji Picker Bar */
+.emoji-picker-popover {
+  position: absolute;
+  top: -36px; /* Sits cleanly above the message bubble */
+  display: none; /* Keeps it hidden until hovered */
+  background-color: #1e293b; /* Premium dark slate background */
+  border: 1px solid #334155;
+  border-radius: 20px;
+  padding: 4px 10px;
+  gap: 8px;
+  z-index: 99;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.15s ease-out;
+}
+
+/* Dynamically align popover to the right for your messages, left for others */
+.message-bubble.me .emoji-picker-popover { right: 8px; }
+.message-bubble.them .emoji-picker-popover { left: 8px; }
+
+/* 3. Show the Picker Bar smoothly on Hover */
+.message-bubble.me:hover .emoji-picker-popover,
+.message-bubble.them:hover .emoji-picker-popover {
+  display: flex;
+}
+
+/* 4. Interactive Emoji Option Buttons */
+.emoji-picker-popover button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.emoji-picker-popover button:hover {
+  transform: scale(1.4); /* Pop out effect on hover */
+}
+
+/* 5. Attached Reactions Capsule at the Bottom Edge */
+.badge-reactions-container {
+  display: flex;
+  gap: 4px;
+  position: absolute;
+  bottom: -6px; /* Pulls capsule tightly to the lower boundary */
+  right: 12px;
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-radius: 12px;
+  padding: 2px 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+.reaction-badge {
+  font-size: 13px;
+  -webkit-user-select: none; /* Safe cross-browser support */
+  user-select: none;
+}
+
+@keyframes fadeIn {
+  0% { 
+    opacity: 0; 
+    transform: translateY(4px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}

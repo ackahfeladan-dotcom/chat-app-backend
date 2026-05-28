@@ -1,0 +1,438 @@
+import { useState, useEffect, useRef } from 'react';
+import io from 'socket.io-client';
+import './App.css';
+
+// Establishes the real-time websocket link to our backend
+const socket = io.connect('https://chat-app-backend-osyn.onrender.com');
+
+function App() {
+  const [username, setUsername] = useState('');
+  const [joined, setJoined] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageList, setMessageList] = useState([]);
+  const [contactInput, setContactInput] = useState('');
+  const [contacts, setContacts] = useState([]);
+  const [activeChat, setActiveChat] = useState('');
+  const [currentRoomId, setCurrentRoomId] =useState("");
+  const messagesEndRef = useRef(null);
+  const [typingStatus, setTypingStatus] = useState("");
+  const [onlineList, setOnlineList] = useState([]);
+
+useEffect(() => {
+    // 1. Listen for the backend confirming a chat link is active
+    socket.on("chat_joined", ({ roomId, target }) => {
+        console.log("Chat linked for room ID:", roomId);
+        setCurrentRoomId(roomId);
+        setActiveChat(target); // Sets the header name to the friend you added
+
+        // 2. Automatically add them to your sidebar contact list array
+        setContacts((prev) => {
+            if (!prev.includes(target)) {
+                return [...prev, target];
+            }
+            return prev;
+        });
+    });
+
+
+// 2.5 Listen for incoming emoji reactions from your server
+    socket.on('receive_reaction', ({ messageId, reactorName, emoji }) => {
+      setMessageList((prevMessages) =>
+        prevMessages.map((msg) => {
+          // Check if this message matches the one that got a reaction
+          if (msg._id === messageId || msg.id === messageId) {
+            const currentReactions = msg.reactions || {};
+            currentReactions[reactorName] = emoji;
+            return { ...msg, reactions: { ...currentReactions } };
+          }
+          return msg;
+        })
+      );
+    });
+    // 3. Keep your auto-scroll helper running smoothly
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+    // 4. Clean up listener when the app reloads to prevent layout bugs
+    return () => {
+        socket.off("chat_joined");
+             socket.off("receive_reaction"); // Add this line here
+    };
+    
+}, [messageList]);
+const handleAddContact = async () => {
+    if (!contactInput.trim()) return;
+
+    const cleanTarget = contactInput.toLowerCase().trim();
+    const cleanMe = username.toLowerCase().trim();
+
+    try {
+      // 1. Save to your live Render database
+      const response = await fetch('https://chat-app-backend-osyn.onrender.com/add-contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          username: cleanMe,
+          contactName: cleanTarget
+        })
+      });
+
+      const data = await response.json();
+      console.log("Logged in successfully:", data);
+
+      // 2. Signal the live socket server to open the chat room
+      socket.emit("access_chat", {
+        currentUsername: cleanMe,
+        targetUsername: cleanTarget
+      });
+
+      // 3. Update UI states
+      setContacts((prev) => [...prev, cleanTarget]);
+      setContactInput('');
+    } catch (error) {
+      console.error("Error adding contact:", error);
+    }
+  };
+ const joinRoom = () => {
+    if (username !== "") {
+        const cleanName = username.toLowerCase().trim();
+        
+        // 💡 Added the arrow function callback at the end to prevent server crashes
+        socket.emit("login_user", cleanName, (response) => {
+            console.log("Logged in successfully:", response);
+        });
+        
+        setJoined(true);
+    }
+};
+const sendMessage = async () => {
+    if (message !== "" && currentRoomId !== "") {
+      const messageData = {
+        id: `${username}-${Date.now()}`, // Added unique ID for deletion tracking
+        room: currentRoomId,
+        author: username,
+        recipient: activeChat,
+        message: message,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      await socket.emit('send_message', messageData);
+      setMessageList((list) => [...list, messageData]);
+      setMessage('');
+    }
+  };
+
+  const deleteMessage = (messageId) => {
+    // Tell your backend socket to delete it globally
+    socket.emit('delete_message', { room: currentRoomId, id: messageId });
+    // Instantly remove it from your own screen safely
+    setMessageList((prevList) => prevList.filter((msg) => msg.id !== messageId));
+  };
+
+useEffect(() => {
+    // Listen for incoming global messages
+    socket.on('receive_message', (data) => {
+      if (data.room === currentRoomId) {
+        setMessageList((list) => [...list, data]);
+      }
+    });
+    // Add this starting at line 55:
+    socket.on("user_typing", (data) => {
+        setTypingStatus(`${data.username} is typing...`);
+    });
+
+    socket.on("user_stop_typing", () => {
+        setTypingStatus("");
+    });
+
+// Listen for database history logs initialization
+    socket.on('chat_initialized', ({ roomId, history }) => {
+      setCurrentRoomId(roomId);
+      setMessageList(history);
+      
+      // 🌟 This must go INSIDE this block so it knows what roomId is!
+      socket.emit('mark_as_read', { chatId: roomId });
+    });
+
+    socket.on('update_online_users', (users) => {
+      setOnlineList(users);
+    });
+
+    // Listen for status updates on messages (Like read receipts)
+    socket.on('messages_updated_status', ({ chatId, status }) => {
+      if (chatId === currentRoomId) {
+        setMessageList((prev) =>
+          prev.map((msg) => ({ ...msg, status: status }))
+        );
+      }
+    });
+
+    return () => {
+      socket.off('receive_message');
+      socket.off('update_online_users');
+      socket.off('chat_initialized');
+      socket.off('user_typing');      // <-- Add this cleanup
+      socket.off('user_stop_typing'); //<-- Add this cleanup
+      socket.off('messages_updated_status');
+    };
+  }, [currentRoomId]);
+return (
+    <div className="App">
+{!joined ? (
+        <div className="login-container">
+          <div className="login-card">
+            <div className="login-logo">
+              <svg viewBox="0 0 24 24" width="50" height="50" fill="currentColor">
+                <path d="M12.003 21.13c-.417 0-.817-.072-1.196-.21a1.002 1.002 0 0 0-.796.066L7 22.5v-3.323a1 1 0 0 0-.317-.724A9.231 9.231 0 0 1 3.5 12c0-4.963 4.037-9 9-9s9 4.037 9 9-4.037 9-9 9.13zM12 1a11 11 0 0 0-8.91 17.416L2 23l4.796-1.744A10.941 10.941 0 0 0 12 23c6.075 0 11-4.925 11-11S18.075 1 12 1z"/>
+              </svg>
+            </div>
+            <h2>Welcome to ChatApp</h2>
+            <p>Enter your username to launch your real-time chat dashboard.</p>
+            
+            <div className="login-form-group">
+              <input 
+                type="text" 
+                placeholder="Your Name..." 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && joinRoom()}
+              />
+              <button onClick={joinRoom}>Login</button>
+            </div>
+          </div>
+        </div>
+      ) : (
+ <div className="chat-container">
+      {/* SIDEBAR CONTAINER */}
+      <div className="sidebar">
+        
+<div className="sidebar-header">
+  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+    <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '700', color: 'var(--text-main)', letterSpacing: '-0.5px' }}>Chats</h2>
+  </div>
+  <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-muted)' }}>Welcome back to your workspace</p>
+</div>
+
+{/* THE ADVANCED ACTION BAR ROW */}
+<div className="add-contact-form">
+  <input
+    type="text"
+    className="add-contact-input"
+    placeholder="Add contact name..."
+    autoCapitalize="none"
+    autoCorrect="off"
+    value={contactInput}
+    onChange={(e) => setContactInput(e.target.value.toLowerCase().trim())}
+  />
+  <button className="add-contact-button" onClick={handleAddContact}>
+    Add
+  </button>
+</div>
+            
+{/* CONTACTS LIST */}
+        <div className="users-list">
+          {contacts.map((contact, idx) => (
+            <div 
+              key={idx} 
+              className={`user-item ${activeChat === contact ? 'active' : ''}`}
+              onClick={() => {
+                setActiveChat(contact);
+                socket.emit("access_chat", {
+                  currentUsername: username.toLowerCase().trim(),
+                  targetUsername: contact
+                });
+              }}
+            >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
+              <span className="username-text" style={{ flex: 1 }}>{contact}</span>
+              
+              <div style={{
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
+                backgroundColor: onlineList.includes(contact.toLowerCase().trim()) ? '#10b981' : '#64748b',
+                boxShadow: onlineList.includes(contact.toLowerCase().trim()) ? '0 0 8px #10b981' : 'none',
+                transition: 'all 0.3s ease-in-out'
+              }} />
+            </div>
+            </div>
+          ))}
+        </div>
+</div> {/* This closes your sidebar cleanly */}
+
+    {/* MAIN CHAT SCREEN AREA */}
+    <div className="chat-window">
+      {activeChat ? (
+        <>
+          <div className="sidebar-header" style={{ padding: '16px 24px', background: 'var(--bg-sidebar)' }}>
+            <p style={{ margin: 0, fontWeight: 600 }}>
+              Chatting with: <span className="username-text">{activeChat}</span>
+            </p>
+          </div>
+          
+ <div className="chat-body">
+{messageList.map((content, idx) => {
+        const isOwnMessage = content.author === username;
+        const isAnImage = content.isImage || (content.message && content.message.includes("cloudinary.com"));
+
+        return (
+          <div
+            key={content.id || idx}
+            className={isOwnMessage ? "message-bubble me" : "message-bubble them"}
+            style={{
+              position: 'relative',
+              paddingBottom: '24px',
+              alignSelf: isOwnMessage ? 'flex-end' : 'flex-start',
+              marginBottom: '12px',
+              maxWidth: '65%'
+                  }} >
+            {/* Modern Floating Hover Picker */}
+<div className="emoji-picker-popover">
+      {['👍', '❤️', '😂', '🔥', '😮'].map((emoji) => (
+        <button
+          key={emoji}
+          onClick={() => socket.emit('send_reaction', {
+            chatId: currentRoomId,
+            messageId: content.id || content._id || idx.toString(),
+            reactorName: username,
+            emoji
+          })}
+        >
+          {emoji}
+        </button>
+      ))}
+    </div>
+          
+            {/* 1. Cloudinary Images */}
+            {isAnImage ? (
+              <img
+                src={content.message}
+                alt="Shared attachment"
+                style={{ maxWidth: '100%', maxHeight: '250px', borderRadius: '8px', marginTop: '4px' }}
+              />
+            ) : (
+              <p style={{ margin: 0 }}>{content.message}</p>
+            )}
+
+            {/* 2. Timestamps & Status Receipts */}
+            <span style={{
+              fontSize: '10px',
+              color: 'var(--text-muted)',
+              position: 'absolute',
+              bottom: '2px',
+              right: isOwnMessage ? '26px' : '8px'
+            }}>
+              {content.time || (content.timestamp ? new Date(content.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '')}
+              {isOwnMessage && (content.status === 'read' ? ' ✓✓' : ' ✓')}
+            </span>
+
+            {/* 3. Trash Bin Delete Button */}
+            {isOwnMessage && (
+              <button 
+                onClick={() => deleteMessage(content.id)}
+                style={{
+                  position: 'absolute',
+                  bottom: '2px',
+                  right: '6px',
+                  background: 'none',
+                  border: 'none',
+                  color: '#ff4d4d',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  opacity: 0.8,
+                  padding: '2px',
+                  zIndex: 10
+                }}
+                title="Delete message"
+              >
+                🗑️
+              </button>
+            )}
+          </div>
+        );
+      })}
+          
+       <div ref={messagesEndRef} />
+    </div>
+   {typingStatus && (
+  <div style={{ padding: '5px 15px', fontSize: '13px', color: '#8696a0', fontStyle: 'italic' }}>
+    {typingStatus}
+  </div>
+  )}
+  {typingStatus && (
+  <div style={{ padding: '5px 15px', fontSize: '13px', color: '#8696a0', fontStyle: 'italic', background: '#f0f2f5' }}>
+    {typingStatus}
+  </div>
+)}
+<div className="chat-footer">
+  {/* Modern Attachment Upload Icon */}
+  <label className="attachment-btn" style={{ cursor: 'pointer', margin: 0 }}>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+    </svg>
+    <input
+      type="file"
+      accept="image/*"
+      style={{ display: 'none' }}
+      onChange={async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "chat_app_preset");
+
+        try {
+          const res = await fetch("https://api.cloudinary.com/v1_1/dxk6jsrpc/image/upload", {
+            method: "POST",
+            body: formData
+          });
+          const data = await res.json();
+          if (data.secure_url) {
+            setMessage(data.secure_url);
+          }
+        } catch (err) {
+          console.error("Upload failed:", err);
+        }
+      }}
+    />
+  </label>
+
+  {/* Pill Message Bar with your Typing Status Logic */}
+  <input
+    type="text"
+    placeholder="Type a message..."
+    value={message} // Make sure this matches your variable name (currentMessage or message)
+    onChange={(e) => {
+      setMessage(e.target.value);
+      if (e.target.value !== "") {
+        socket.emit("typing", { room: currentRoomId, username: username });
+      } else {
+        socket.emit("stop_typing", { room: currentRoomId });
+      }
+    }}
+    onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
+    onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+  />
+
+  {/* WhatsApp-Style Circular Send Button */}
+  <button className="send-btn" onClick={sendMessage}>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="22" y1="2" x2="11" y2="13"></line>
+      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+    </svg>
+  </button>
+</div>
+              </>
+            ) : (
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
+                <h3>Select a contact to start chatting</h3>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
