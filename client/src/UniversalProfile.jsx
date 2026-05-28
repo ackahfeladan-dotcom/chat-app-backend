@@ -1,79 +1,158 @@
 import { useState } from 'react';
 
 export default function UniversalProfile({ isOpen, onClose, currentProfile, onSave }) {
-  // Local form states initialized cleanly from parent props
   const [name, setName] = useState(currentProfile?.displayName || '');
   const [bio, setBio] = useState(currentProfile?.bio || '');
   const [status, setStatus] = useState(currentProfile?.statusEmoji || '💬');
 
-  // If the control state is false, render absolutely nothing
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-sm p-6 rounded-2xl bg-zinc-950 border border-zinc-800/80 text-white shadow-2xl">
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      backdropFilter: 'blur(4px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 9999,
+    }}>
+      <div style={{
+        width: '100%',
+        maxWidth: '360px',
+        backgroundColor: '#0c0c0e',
+        border: '1px solid #27272a',
+        borderRadius: '16px',
+        padding: '24px',
+        color: '#ffffff',
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+        fontFamily: 'sans-serif'
+      }}>
         
-        {/* Dynamic Header Layout */}
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xs font-bold tracking-widest uppercase text-zinc-400">Profile Settings</h3>
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h3 style={{ margin: 0, fontSize: '12px', fontWeight: 'bold', tracking: '0.1em', uppercase: 'true', color: '#a1a1aa' }}>
+            PROFILE SETTINGS
+          </h3>
           <button 
-            type="button"
+            type="button" 
             onClick={onClose} 
-            className="text-zinc-500 hover:text-white transition cursor-pointer text-sm"
+            style={{ background: 'none', border: 'none', color: '#71717a', cursor: 'pointer', fontSize: '16px' }}
           >
             ✕
           </button>
         </div>
 
-        {/* Form Body Context */}
-        <div className="space-y-5">
-          {/* Universal Avatar Module */}
-          <div className="flex flex-col items-center gap-2 py-2">
-            <div className="w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-3xl shadow-inner relative">
-              {status}
-              <span className="absolute bottom-0 right-0 w-5 h-5 bg-emerald-500 border border-zinc-950 rounded-full flex items-center justify-center text-[10px] shadow">✓</span>
-            </div>
-            <p className="text-[10px] text-zinc-500 tracking-tight text-center">Your details are saved universally on this browser</p>
+        {/* Avatar Display */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+          <div style={{
+            width: '80px',
+            height: '80px',
+            borderRadius: '50%',
+            backgroundColor: '#18181b',
+            border: '1px solid #27272a',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '32px',
+            position: 'relative'
+          }}>
+            {status}
+            <span style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              width: '20px',
+              height: '20px',
+              backgroundColor: '#10b981',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '10px',
+              color: '#000',
+              fontWeight: 'bold'
+            }}>✓</span>
           </div>
+          <p style={{ margin: 0, fontSize: '11px', color: '#52525b', textAlign: 'center' }}>
+            Saved directly to your browser storage
+          </p>
+        </div>
 
-          {/* Name Field */}
+        {/* Inputs */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label className="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Your Name</label>
+            <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', color: '#a1a1aa', marginBottom: '6px' }}>
+              Your Name
+            </label>
             <input 
               type="text" 
               value={name} 
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 text-sm rounded-lg bg-zinc-900 border border-zinc-800 text-white focus:outline-none focus:border-emerald-500 transition"
-              placeholder="Type name like WhatsApp..." 
-              maxLength={25}
+              placeholder="Name like WhatsApp..."
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                fontSize: '14px',
+                borderRadius: '8px',
+                backgroundColor: '#18181b',
+                border: '1px solid #27272a',
+                color: '#ffffff',
+                outline: 'none',
+                boxSizing: 'border-box'
+              }}
             />
           </div>
 
-          {/* Status Bio Field */}
           <div>
-            <label className="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">About Status</label>
+            <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', color: '#a1a1aa', marginBottom: '6px' }}>
+              About Bio
+            </label>
             <input 
               type="text" 
               value={bio} 
               onChange={(e) => setBio(e.target.value)}
-              className="w-full px-3 py-2 text-sm rounded-lg bg-zinc-900 border border-zinc-800 text-white focus:outline-none focus:border-emerald-500 transition"
-              placeholder="Hey there! I am using this chat app." 
-              maxLength={60}
+              placeholder="Hey there! I am using this chat app."
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                fontSize: '14px',
+                borderRadius: '8px',
+                backgroundColor: '#18181b',
+                border: '1px solid #27272a',
+                color: '#ffffff',
+                outline: 'none',
+                boxSizing: 'border-box'
+              }}
             />
           </div>
 
-          {/* Emoji Preset Selection Array */}
+          {/* Emojis grid */}
           <div>
-            <label className="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Profile Mood Status</label>
-            <div className="flex gap-2 justify-between">
+            <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', color: '#a1a1aa', marginBottom: '8px' }}>
+              Profile Mood Vibe
+            </label>
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'space-between' }}>
               {['💬', '🚀', '🎧', '🔋', '💼', '✨'].map((emoji) => (
                 <button
                   key={emoji}
                   type="button"
                   onClick={() => setStatus(emoji)}
-                  className={`p-2 rounded-lg border text-lg transition flex-1 text-center cursor-pointer ${
-                    status === emoji ? 'border-emerald-500 bg-emerald-500/10' : 'border-zinc-900 bg-zinc-900/40 hover:bg-zinc-800'
-                  }`}
+                  style={{
+                    flex: 1,
+                    padding: '8px 0',
+                    borderRadius: '8px',
+                    fontSize: '18px',
+                    border: status === emoji ? '1px solid #10b981' : '1px solid #27272a',
+                    backgroundColor: status === emoji ? 'rgba(16, 185, 129, 0.1)' : '#18181b',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                    transition: '0.2s'
+                  }}
                 >
                   {emoji}
                 </button>
@@ -82,22 +161,43 @@ export default function UniversalProfile({ isOpen, onClose, currentProfile, onSa
           </div>
         </div>
 
-        {/* Modal Controls Actions Footer */}
-        <div className="flex gap-2 mt-6">
+        {/* Action buttons */}
+        <div style={{ display: 'flex', gap: '8px', marginTop: '24px' }}>
           <button 
-            type="button"
-            onClick={onClose} 
-            className="flex-1 py-2 text-xs font-semibold text-zinc-400 bg-zinc-900 hover:bg-zinc-800 rounded-lg border border-zinc-800/60 transition cursor-pointer"
+            type="button" 
+            onClick={onClose}
+            style={{
+              flex: 1,
+              padding: '10px',
+              fontSize: '13px',
+              fontWeight: '600',
+              borderRadius: '8px',
+              backgroundColor: '#18181b',
+              border: '1px solid #27272a',
+              color: '#a1a1aa',
+              cursor: 'pointer'
+            }}
           >
             Cancel
           </button>
           <button 
             type="button"
             onClick={() => {
-              if (!name.trim()) return alert("Please enter a valid profile name.");
+              if (!name.trim()) return alert("Please enter your name.");
               onSave({ displayName: name.trim(), bio: bio.trim(), statusEmoji: status });
             }}
-            className="flex-1 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg transition shadow-md cursor-pointer shadow-emerald-950/20"
+            style={{
+              flex: 1,
+              padding: '10px',
+              fontSize: '13px',
+              fontWeight: '600',
+              borderRadius: '8px',
+              backgroundColor: '#059669',
+              border: 'none',
+              color: '#ffffff',
+              cursor: 'pointer',
+              boxShadow: '0 4px 6px -1px rgba(0,0,0,0.2)'
+            }}
           >
             Save Profile
           </button>
