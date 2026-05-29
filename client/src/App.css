@@ -498,3 +498,76 @@ html, body {
     transform: translateY(0); 
   }
 }
+/* ==========================================================================
+   PREMIUM MOBILE NAVIGATION & THEME STYLING
+   ========================================================================== */
+
+/* 1. Mobile-Specific Breakpoints (Screen width 768px and below) */
+@media (max-width: 768px) {
+  /* When a chat is open, completely slide/hide the left contact sidebar */
+  .users-list.hide-on-mobile {
+    display: none !important;
+  }
+
+  /* When no chat is selected, hide the right chat window container */
+  .chat-window.hide-on-mobile {
+    display: none !important;
+  }
+
+  /* Force active screen containers to occupy full screen width on phones */
+  .users-list,
+  .chat-window {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Style the mobile navigation back arrow button */
+  .mobile-back-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .mobile-back-btn:active {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* 2. Desktop-Specific Overrides (Laptop screens and up) */
+@media (min-width: 769px) {
+  /* Permanently hide the back arrow button on desktop layouts */
+  .mobile-back-btn {
+    display: none !important;
+  }
+}
+
+/* 3. Premium UI Additions (Sleek Dark Mode Polish) */
+.username-text {
+  color: #38bdf8; /* Modern electric blue accent for the header name */
+  font-weight: 700;
+}
+
+/* Placeholder view on desktop when no conversation is active */
+.no-chat-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: #0f172a; /* Deep slate professional dark look */
+  color: #64748b;
+  font-size: 16px;
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+
 import io from 'socket.io-client';
 import './App.css';
 import UniversalProfile from './UniversalProfile';
@@ -13,11 +14,13 @@ function App() {
   const [messageList, setMessageList] = useState([]);
   const [contactInput, setContactInput] = useState('');
   const [contacts, setContacts] = useState([]);
-  const [activeChat, setActiveChat] = useState('');
+  
   const [currentRoomId, setCurrentRoomId] =useState("");
   const messagesEndRef = useRef(null);
   const [typingStatus, setTypingStatus] = useState("");
   const [onlineList, setOnlineList] = useState([]);
+  const [activeChat, setActiveChat] = useState(null);
+  
   // --- UNIVERSAL PROFILE STATES ---
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [myUniversalProfile, setMyUniversalProfile] = useState(() => {
@@ -217,8 +220,9 @@ return (
         </div>
       ) : (
  <div className="chat-container">
-      {/* SIDEBAR CONTAINER */}
-      <div className="sidebar">
+    
+      
+        <div className={`sidebar ${activeChat ? 'hide-on-mobile' : ''}`}>
         
 <div className="sidebar-header">
   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
@@ -252,7 +256,7 @@ return (
 </div>
             
 {/* CONTACTS LIST */}
-        <div className="users-list">
+        <div className={`users-list ${ !activeChat ? 'hide-on-mobile' : ''}`}>
           {contacts.map((contact, idx) => (
             <div 
               key={idx} 
@@ -283,14 +287,20 @@ return (
 </div> {/* This closes your sidebar cleanly */}
 
     {/* MAIN CHAT SCREEN AREA */}
-    <div className="chat-window">
-      {activeChat ? (
-        <>
-          <div className="sidebar-header" style={{ padding: '16px 24px', background: 'var(--bg-sidebar)' }}>
-            <p style={{ margin: 0, fontWeight: 600 }}>
-              Chatting with: <span className="username-text">{activeChat}</span>
-            </p>
-          </div>
+    <div className={`chat-window ${!activeChat ? 'hide-on-mobile' : ''}`}>
+ {activeChat ? (
+  <>
+  <div className="sidebar-header" style={{ padding: '16px 24px', background: 'var(--...', display: 'flex', alignItems: 'center', gap: '12px' }}>
+    {/* 👇 THIS IS YOUR NEW MOBILE BACK BUTTON */}
+    <button className="mobile-back-btn" onClick={() => setActiveChat('')}>
+      ←
+    </button>
+
+    <p style={{ margin: 0, fontWeight: 600 }}>
+      Chatting with: <span className="username-text">{activeChat}</span>
+    </p>
+  </div>
+
           
  <div className="chat-body">
 {messageList.map((content, idx) => {
@@ -381,22 +391,18 @@ return (
                 🗑️
               </button>
             )}
-          </div>
-        );
-      })}
-          
-       <div ref={messagesEndRef} />
-    </div>
-   {typingStatus && (
-  <div style={{ padding: '5px 15px', fontSize: '13px', color: '#8696a0', fontStyle: 'italic' }}>
-    {typingStatus}
+ </div>
+      );
+    })}
+    
+    <div ref={messagesEndRef} />
   </div>
-  )}
+
   {typingStatus && (
-  <div style={{ padding: '5px 15px', fontSize: '13px', color: '#8696a0', fontStyle: 'italic', background: '#f0f2f5' }}>
-    {typingStatus}
-  </div>
-)}
+    <div style={{ padding: '5px 15px', fontSize: '13px', color: '#8696a0', fontStyle: 'italic' }}>
+      {typingStatus}
+    </div>
+  )}
 <div className="chat-footer">
   {/* Modern Attachment Upload Icon */}
   <label className="attachment-btn" style={{ cursor: 'pointer', margin: 0 }}>
@@ -456,26 +462,27 @@ return (
     </svg>
   </button>
 </div>
-              </>
-            ) : (
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
-                <h3>Select a contact to start chatting</h3>
-              </div>
-            )}
-          </div>
-        </div>
+  </>
+) : (
+  <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <h3>Select a contact to start chatting</h3>
+  </div>
+)}
+</div>
+
+{/* UNIVERSAL PROFILE MODAL COMPONENT */}
+<UniversalProfile
+  isOpen={isProfileModalOpen}
+  onClose={() => setIsProfileModalOpen(false)}
+  currentProfile={myUniversalProfile}
+  onSave={(updatedProfile) => {
+    setMyUniversalProfile(updatedProfile);
+    localStorage.setItem('universal_chat_profile', JSON.stringify(updatedProfile));
+    setIsProfileModalOpen(false);
+  }}
+/>
+</div>
       )}
-      {/* Universal WhatsApp-style Profile Popup Modal */}
-      <UniversalProfile 
-        isOpen={isProfileModalOpen}
-        onClose={() => setIsProfileModalOpen(false)}
-        currentProfile={myUniversalProfile}
-        onSave={(updatedProfile) => {
-          setMyUniversalProfile(updatedProfile);
-          localStorage.setItem('universal_chat_profile', JSON.stringify(updatedProfile));
-          setIsProfileModalOpen(false);
-        }}
-      />
     </div>
   );
 }
