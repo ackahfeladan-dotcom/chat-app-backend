@@ -1,0 +1,954 @@
+/* ==========================================================================
+   GLOBAL TELEGRAM/WHATSAPP INSPIRED MASTER RESET
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Premium Corporate Dark Palette */
+  --bg-main: #0f1115;          /* Sophisticated deep dark luxury black background */
+  --bg-sidebar: #161920;       /* High-end corporate slate-blue sidebar */
+  --bg-chat: #0f1115;          /* Seamless matching dark chat panel space */
+  --panel-header: #1c202b;     /* Distinct contrasting header zone bars */
+
+  /* High-Ranked Vibrant Accents */
+  --primary: #3b82f6;           /* Premium Microsoft/Slack style Electric Blue */
+  --primary-hover: #2563eb;     /* Deep royal tone on active cursor clicks */
+  --telegram-blue: #0ea5e9;     /* Vibrant sky blue secondary asset tracking accent */
+
+  /* Crisp Typography & Clean Lines */
+  --text-main: #f8fafc;         /* Pure crisp off-white for perfect reading view */
+  --text-muted: #94a3b8;        /* Soft low-contrast ash gray for time and meta labels */
+  --border-color: #232834;      /* Ultra-thin professional slate divider borders */
+
+  /* Modern Professional Chat Bubbles */
+  --bubble-me: #3b82f6;         /* Outgoing message: Electric Corporate Blue bubble */
+  --bubble-them: #22252e;       /* Incoming message: Clean slate-gray bubble */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   APP CONTAINER & SIDEBAR SYSTEM
+   ========================================================================== */
+.chat-layout, .chat-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.chat-sidebar, .sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 340px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.chat-window {
+  flex: 1;
+  background-color: var(--bg-chat);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+
+/* ==========================================================================
+   PREMIUM "ADD CONTACT" ROW DESIGN
+   ========================================================================== */
+.chat-sidebar form, 
+.add-contact-form {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 10px !important;
+  padding: 14px 16px !important;
+  width: 100% !important;
+  background-color: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chat-sidebar form input,
+.add-contact-input {
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding: 10px 16px !important;
+  background-color: #202c33 !important; /* Inset contrast search style */
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  color: var(--text-main) !important;
+  font-size: 14px !important;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.chat-sidebar form input:focus,
+.add-contact-input:focus {
+  border-color: var(--primary) !important;
+  background-color: #2a3942 !important;
+}
+
+.chat-sidebar form button,
+.add-contact-button {
+  flex-shrink: 0 !important;
+  padding: 10px 20px !important;
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+  transition: all 0.15s ease !important;
+}
+
+.chat-sidebar form button:hover,
+.add-contact-button:hover {
+  background-color: var(--primary-hover) !important;
+  transform: translateY(-1px);
+}
+
+.chat-sidebar form button:active,
+.add-contact-button:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   PREMIUM MODERN CHAT FOOTER & SEND BAR
+   ========================================================================== */
+.chat-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background-color: var(--panel-header);
+  width: 100%;
+}
+
+.chat-footer input {
+  flex: 1;
+  min-width: 0;
+  background-color: #2a3942;
+  border: 1px solid transparent;
+  color: var(--text-main);
+  padding: 11px 18px;
+  border-radius: 22px; /* Pill-shaped like modern apps */
+  outline: none;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.chat-footer input:focus {
+  border-color: rgba(255,255,255,0.1);
+}
+
+.chat-footer button,
+.send-button {
+  background-color: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%; /* Perfect circle WhatsApp style button */
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 14px;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.chat-footer button:hover,
+.send-button:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   HIGH-END LOGIN / JOIN PORTAL DESIGN
+   ========================================================================== */
+.joinChatContainer, .login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at top, #1c2e38 0%, #0b141a 100%);
+  padding: 20px;
+}
+
+.joinChatContainer h3, .login-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
+}
+
+.joinChatContainer input, .login-input {
+  width: 100%;
+  max-width: 320px;
+  padding: 14px 18px;
+  background-color: #111b21;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-main);
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.joinChatContainer input:focus, .login-input:focus {
+  border-color: var(--telegram-blue);
+}
+
+.joinChatContainer button, .login-button {
+  width: 100%;
+  max-width: 320px;
+  padding: 14px;
+  background-color: var(--telegram-blue); /* Sleek Telegram Blue for authentication */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(36, 129, 204, 0.25);
+  transition: all 0.2s ease;
+}
+
+.joinChatContainer button:hover, .login-button:hover {
+  background-color: #1d72b8;
+  box-shadow: 0 6px 16px rgba(36, 129, 204, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   MESSAGE CHAT BUBBLE ENGINE
+   ========================================================================== */
+.chat-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  width: 100%;
+  background-color: #0b141a;
+}
+
+.message-bubble {
+  display: block;
+  max-width: 65%;
+  padding: 8px 14px 10px 14px;
+  line-height: 1.45;
+  word-break: break-word;
+  font-size: 15px;
+  margin: 4px 0;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+}
+
+.message-bubble.me {
+  background-color: var(--bubble-me);
+  color: #e9edef;
+  align-self: flex-end;
+  border-radius: 8px 0px 8px 8px; /* Classic message tail-cut look */
+}
+
+.message-bubble.them {
+  background-color: var(--bubble-them);
+  color: #e9edef;
+  align-self: flex-start;
+  border-radius: 0px 8px 8px 8px;
+}
+
+/* ==========================================================================
+   CLEAN MOBILE RESPONSIVE ADAPTATION ENGINE
+   ========================================================================== */
+@media (max-width: 768px) {
+  .chat-layout, .chat-container {
+    flex-direction: column !important;
+  }
+
+  .chat-sidebar, .sidebar {
+    display: flex !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .message-bubble {
+    max-width: 85% !important;
+  }
+}
+/* ==========================================================================
+   MATCHING CLASS HOOKS FOR APP.JSX LOGIN VIEW
+   ========================================================================== */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at top, #1c2e38 0%, #0b141a 100%);
+  padding: 20px;
+}
+
+.login-card {
+  background-color: #111b21;
+  padding: 30px 24px;
+  border-radius: 16px;
+  border: 1px solid #222e35;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.login-logo svg {
+  color: #2481cc; /* Telegram-style blue logo icon */
+  margin-bottom: 8px;
+}
+
+.login-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #e9edef;
+  margin: 10px 0 6px 0;
+}
+
+.login-card p {
+  color: #8696a0;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+
+/* Styled login text box */
+.login-form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #202c33;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #e9edef;
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.login-form-group input:focus {
+  border-color: #2481cc;
+  background-color: #2a3942;
+}
+
+/* Styled clean submit login button */
+.login-form-group button {
+  width: 100%;
+  padding: 14px;
+  background-color: #2481cc; /* Elegant Telegram blue action color */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(36, 129, 204, 0.25);
+  transition: all 0.2s ease;
+}
+
+.login-form-group button:hover {
+  background-color: #1d72b8;
+  box-shadow: 0 6px 16px rgba(36, 129, 204, 0.4);
+  transform: translateY(-1px);
+}
+/* ==========================================================================
+   PREMIUM SIDEBAR TYPOGRAPHY & HEADER POLISH
+   ========================================================================== */
+.sidebar-header {
+  padding: 20px 16px 8px 16px;
+  background-color: var(--bg-sidebar);
+}
+
+.sidebar-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.sidebar-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+}
+
+/* Elegant status badge for the logged-in user */
+.user-badge {
+  background-color: rgba(0, 168, 132, 0.1);
+  color: var(--primary);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(0, 168, 132, 0.2);
+}
+
+.welcome-text {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+/* 1. Base Message Bubble Adjustments */
+.message-bubble.me, 
+.message-bubble.them {
+  position: relative !important; /* Ensures absolutely positioned elements anchor correctly */
+}
+
+/* 2. Hidden Floating Hover Emoji Picker Bar */
+.emoji-picker-popover {
+  position: absolute;
+  top: -36px; /* Sits cleanly above the message bubble */
+  display: none; /* Keeps it hidden until hovered */
+  background-color: #1e293b; /* Premium dark slate background */
+  border: 1px solid #334155;
+  border-radius: 20px;
+  padding: 4px 10px;
+  gap: 8px;
+  z-index: 99;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.15s ease-out;
+}
+
+/* Dynamically align popover to the right for your messages, left for others */
+.message-bubble.me .emoji-picker-popover { right: 8px; }
+.message-bubble.them .emoji-picker-popover { left: 8px; }
+
+/* 3. Show the Picker Bar smoothly on Hover */
+.message-bubble.me:hover .emoji-picker-popover,
+.message-bubble.them:hover .emoji-picker-popover {
+  display: flex;
+}
+
+/* 4. Interactive Emoji Option Buttons */
+.emoji-picker-popover button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.emoji-picker-popover button:hover {
+  transform: scale(1.4); /* Pop out effect on hover */
+}
+
+/* 5. Attached Reactions Capsule at the Bottom Edge */
+.badge-reactions-container {
+  display: flex;
+  gap: 4px;
+  position: absolute;
+  bottom: -6px; /* Pulls capsule tightly to the lower boundary */
+  right: 12px;
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-radius: 12px;
+  padding: 2px 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+.reaction-badge {
+  font-size: 13px;
+  -webkit-user-select: none; /* Safe cross-browser support */
+  user-select: none;
+}
+
+@keyframes fadeIn {
+  0% { 
+    opacity: 0; 
+    transform: translateY(4px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+/* ==========================================================================
+   PREMIUM MOBILE NAVIGATION & THEME STYLING
+   ========================================================================== */
+
+/* 1. Mobile-Specific Breakpoints (Screen width 768px and below) */
+@media (max-width: 768px) {
+  /* When a chat is open, completely slide/hide the left contact sidebar */
+  .users-list.hide-on-mobile {
+    display: none !important;
+  }
+
+  /* When no chat is selected, hide the right chat window container */
+  .chat-window.hide-on-mobile {
+    display: none !important;
+  }
+
+  /* Force active screen containers to occupy full screen width on phones */
+  .users-list,
+  .chat-window {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Style the mobile navigation back arrow button */
+  .mobile-back-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .mobile-back-btn:active {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* 2. Desktop-Specific Overrides (Laptop screens and up) */
+@media (min-width: 769px) {
+  /* Permanently hide the back arrow button on desktop layouts */
+  .mobile-back-btn {
+    display: none !important;
+  }
+}
+
+/* 3. Premium UI Additions (Sleek Dark Mode Polish) */
+.username-text {
+  color: #38bdf8; /* Modern electric blue accent for the header name */
+  font-weight: 700;
+}
+
+/* Placeholder view on desktop when no conversation is active */
+.no-chat-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: #0f172a; /* Deep slate professional dark look */
+  color: #64748b;
+  font-size: 16px;
+}
+/* ==========================================================================
+   UNIVERSAL WHATSAPP STYLING FRAMEWORK (DESKTOP & MOBILE INTEGRATION)
+   ========================================================================== */
+
+/* Universal Core App Container Styling */
+.wa-sidebar-master {
+  background-color: #111b21;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height safely includes mobile browser navigation toolbars */
+  overflow: hidden; /* Stops content from spilling outside the visible window area */
+}
+
+/* 1. Brand Top Layout Header styling rules */
+.wa-top-brand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px 10px 20px;
+  background-color: #111b21;
+}
+
+.wa-brand-title {
+  color: #e9edef;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.wa-header-actions-row {
+  display: flex;
+  gap: 20px;
+}
+
+.wa-header-icon-btn {
+  background: transparent;
+  border: none;
+  color: #e9edef;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Inner component viewport wrapper */
+.wa-tab-viewport-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* 2. Unified Pill Search Field Row */
+.wa-search-bar-wrapper {
+  padding: 8px 16px;
+  background-color: #111b21;
+}
+
+.wa-search-pill-inner {
+  display: flex;
+  align-items: center;
+  background-color: #202c33;
+  padding: 8px 16px;
+  border-radius: 24px; /* Clean pill geometry */
+}
+
+.wa-search-lens {
+  color: #8696a0;
+  margin-right: 12px;
+  font-size: 14px;
+}
+
+.wa-search-pill-inner input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #e9edef;
+  font-size: 15px;
+}
+
+.wa-search-pill-inner input:focus {
+  outline: none;
+}
+
+/* 3. Thread Cards Loop Feed */
+.wa-threads-scrollable-feed {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 160px;
+}
+
+.wa-thread-card-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.wa-thread-card-item:hover {
+  background-color: #202c33;
+}
+
+.wa-item-selected {
+  background-color: #2a3942 !important;
+}
+
+.wa-thread-avatar-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #155e75;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.wa-thread-card-body-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.wa-thread-body-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.wa-thread-contact-name {
+  color: #e9edef;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.wa-thread-timestamp-text {
+  color: #00a884; /* Active WhatsApp message thread green accent */
+  font-size: 12px;
+}
+
+.wa-thread-body-row-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wa-thread-message-snippet-text {
+  color: #8696a0;
+  font-size: 14px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.wa-unread-badge-pill {
+  background-color: #00a884;
+  color: #111b21;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* 4. Floating Action Controls Placement */
+.wa-floating-action-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: transparent;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Styled text box input field */
+.wa-add-user-input-box {
+  flex: 1;
+  padding: 12px 16px;
+  background-color: #202c33; 
+  border: none;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+}
+
+/* Green circular plus button */
+.wa-floating-action-trigger-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background-color: #00a884; 
+  color: #ffffff;
+  border: none;
+  border-radius: 50%; 
+  font-size: 24px;
+  font-weight: normal;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* 5. Fixed Taskbar Dock Configuration */
+.wa-fixed-bottom-nav-dock {
+  height: 64px;
+  background-color: #111b21;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.wa-dock-tab-btn {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #8696a0;
+  cursor: pointer;
+  position: relative;
+  width: 25%;
+}
+
+.wa-dock-icon {
+  font-size: 20px;
+  margin-bottom: 2px;
+  padding: 4px 16px;
+  border-radius: 16px;
+}
+
+.wa-dock-label-text {
+  font-size: 12px;
+}
+
+.dock-tab-active .wa-dock-icon {
+  background-color: rgba(0, 168, 132, 0.15);
+  color: #e9edef;
+}
+
+.dock-tab-active .wa-dock-label-text {
+  color: #e9edef;
+  font-weight: 700;
+}
+
+.wa-dock-count-badge {
+  position: absolute;
+  top: 0px;
+  right: 16px;
+  background-color: #00a884;
+  color: #111b21;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 1px 5px;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN BREAKPOINT LOGIC HANDLERS
+   ========================================== */
+
+/* LAPTOP & COMPUTER LAYOUT RULES (Side-by-Side Panels) */
+@media (min-width: 769px) {
+  .wa-sidebar-master {
+    width: 30% !important;
+    min-width: 350px !important;
+    max-width: 450px !important;
+  }
+}
+
+/* PHONE SMARTPHONE VIEWPORT RULES (Screen Swapping Stack Mode) */
+@media (max-width: 768px) {
+  .wa-sidebar-master {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+  
+  .wa-sidebar-master.hide-on-mobile {
+    display: none !important;
+  }
+}
+/* Mobile Responsive Screen Splitting Switcher */
+@media (max-width: 768px) {
+  /* When NO active chat is selected, hide the conversation window completely */
+  .App:not(.has-active-chat) .wa-chat-window-container,
+  .App:not(.has-active-chat) .message-panel-container,
+  .App:not(.has-active-chat) .wa-message-input-footer-dock {
+    display: none !important;
+  }
+
+  /* When an active chat IS selected, hide the thread list feed and top profile selectors */
+  .App.has-active-chat .wa-sidebar-master,
+  .App.has-active-chat .wa-threads-scrollable-feed,
+  .App.has-active-chat .wa-fixed-bottom-nav-dock {
+    display: none !important;
+  }
+  
+  /* Make the chat window take up the full safe screen view area */
+  .wa-chat-window-container, .message-panel-container {
+    height: 100dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+}
+@media (max-width: 768px) {
+  /* Hide the chat panel if no contact is selected */
+  .App:not(.has-active-chat) .chat-window {
+    display: none !important;
+  }
+
+  /* Hide the contact sidebar panel if a chat IS selected */
+  .App.has-active-chat .wa-sidebar-master,
+  .App.has-active-chat .wa-threads-scrollable-feed,
+  .App.has-active-chat .wa-fixed-bottom-nav-dock {
+    display: none !important;
+  }
+}
+/* --- PREMIUM PUBLIC LAYOUT THEME OVERRIDES --- */
+
+/* 1. Main Left Sidebar Background (Forces transition from green-tint to deep luxury dark slate) */
+.wa-sidebar-master, 
+div[className*="wa-sidebar-master"] {
+  background-color: #131722 !important; /* Deep luxury tech background */
+}
+
+/* 2. Top App Bar Brand Header Panel */
+.wa-top-brand-header {
+  background-color: #1c2030 !important; /* Polished header tint */
+  border-bottom: 1px solid #2a2f45 !important;
+}
+
+/* 3. Global App Branding Title Text (eMa) */
+.wa-brand-title {
+  color: #3b82f6 !important; /* Eye-catching premium corporate electric blue */
+  font-size: 24px !important;
+  font-weight: 800 !important;
+}
+
+/* 4. Meta Search Input Area & Add New User Entry Box */
+.wa-search-bar-input,
+.wa-add-user-input-box,
+input[placeholder*="Ask Meta AI"],
+input[placeholder*="Add new user"] {
+  background-color: #1e2235 !important; /* High-contrast clean dark inputs */
+  border: 1px solid #2a2f45 !important;
+  color: #ffffff !important;
+}
+
+/* 5. Circular Action Plus Trigger Button */
+.wa-floating-action-trigger-btn {
+  background-color: #3b82f6 !important; /* Removes green, swaps to striking Electric Blue */
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4) !important; /* Adds a premium glow */
+}
+
+/* 6. Contact Row Unread Message Badge Indicator */
+span[className*="unread"], 
+.unread-badge,
+div[style*="background-color: rgb(37, 211, 102)"] {
+  background-color: #3b82f6 !important; /* Updates the small unread circle badge to match theme blue */
+  color: #ffffff !important;
+}
