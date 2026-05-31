@@ -391,7 +391,17 @@ return (
 
           
  <div className="chat-body">
-{messageList.map((content, idx) => {
+// 📑 Update your filter step at line 394 to look exactly like this:
+{messageList
+  .filter((content) => {
+    // If we are looking at the Meta AI room view
+    if (currentRoomId === "Meta AI" || activeChat === "Meta AI") {
+      return content.room === "Meta AI" || content.author === "Meta AI" || content.recipient === "Meta AI";
+    }
+    // If we are looking at a regular user room view (like "dee")
+    return content.room === currentRoomId || content.recipient === activeChat || content.author === activeChat;
+  })
+  .map((content, idx) => {
         const isOwnMessage = content.author === username;
         const isAnImage = content.isImage || (content.message && content.message.includes("cloudinary.com"));
 
