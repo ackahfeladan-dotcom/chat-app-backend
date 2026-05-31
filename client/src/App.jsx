@@ -47,38 +47,40 @@ const handleSearchSubmit = () => {
 
 useEffect(() => {
     // 1. Listen for the backend confirming a chat link is active
-    socket.on("chat_joined", ({ roomId, target }) => {
-        console.log("Chat linked for room ID:", roomId);
-        setCurrentRoomId(roomId);
-        setActiveChat(target); // Sets the header name to the friend you added
+    const handleChatJoined = ({ roomId, target }) => {
+      console.log("Chat linked for room ID:", roomId);
+      setCurrentRoomId(roomId);
+      setActiveChat(target);
+      
+      setContacts((prev) => {
+        if (!prev.includes(target)) {
+          return [...prev, target];
+        }
+        return prev;
+      });
+    };
 
-        // 2. Automatically add them to your sidebar contact list array
-        setContacts((prev) => {
-            if (!prev.includes(target)) {
-                return [...prev, target];
-            }
-            return prev;
-        });
-    });
-   socket.on("meta_ai_response", (data) => {
-      // Create a message object matching your app's chat bubble structure
+    // 2. Handle Meta AI responses
+    const handleMetaAIResponse = (data) => {
       const aiMessage = {
         id: `meta-ai-${Date.now()}`,
-        room: "Meta AI", // Explicitly lock this bubble to the Meta AI room view
+        room: "Meta AI",
         author: "Meta AI",
         message: data.reply,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
-
-      // Add it instantly to your visible messages array
       setMessageList((list) => [...list, aiMessage]);
-    });
+    };
 
-// 2.5 Listen for incoming emoji reactions from your server
-    socket.on('receive_reaction', ({ messageId, reactorName, emoji }) => {
+    // 3. Handle normal user-to-user messages
+    const handleReceiveMessage = (data) => {
+      setMessageList((list) => [...list, data]);
+    };
+
+    // 4. Listen for incoming emoji reactions from your server
+    const handleReceiveReaction = ({ messageId, reactorName, emoji }) => {
       setMessageList((prevMessages) =>
         prevMessages.map((msg) => {
-          // Check if this message matches the one that got a reaction
           if (msg._id === messageId || msg.id === messageId) {
             const currentReactions = msg.reactions || {};
             currentReactions[reactorName] = emoji;
@@ -87,18 +89,25 @@ useEffect(() => {
           return msg;
         })
       );
-    });
-    // 3. Keep your auto-scroll helper running smoothly
+    };
+
+    // Attach all live listeners safely
+    socket.on("chat_joined", handleChatJoined);
+    socket.on("meta_ai_response", handleMetaAIResponse);
+    socket.on("receive_message", handleReceiveMessage);
+    socket.on("receive_reaction", handleReceiveReaction);
+
+    // 5. Keep your auto-scroll helper running smoothly whenever messages load
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-    // 4. Clean up listener when the app reloads to prevent layout bugs
+    // 6. Complete cleanup function to prevent memory leaks and layout bugs
     return () => {
-        socket.off("chat_joined");
-             socket.off("receive_reaction"); // Add this line here
-             socket.off("meta_ai_response"); // Add this line here
+      socket.off("chat_joined", handleChatJoined);
+      socket.off("meta_ai_response", handleMetaAIResponse);
+      socket.off("receive_message", handleReceiveMessage);
+      socket.off("receive_reaction", handleReceiveReaction);
     };
-    
-}, [messageList, currentRoomId]);
+  }, []);
 const handleAddContact = async () => {
     if (!contactInput.trim()) return;
 
