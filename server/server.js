@@ -23,7 +23,7 @@ const io = new Server(httpServer, {
 });
 
 // 1. Paste your MongoDB connection string inside these quotes below:
-const MONGO_URI = "mongodb://Calli-Chat:Callitus12345@ac-bv4iqz7-shard-00-00.apgi5ma.mongodb.net:27017,ac-bv4iqz7-shard-00-01.apgi5ma.mongodb.net:27017,ac-bv4iqz7-shard-00-02.apgi5ma.mongodb.net:27017/?ssl=true&replicaSet=atlas-z20bqa-shard-0&authSource=admin&appName=Cluster0";
+const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log("Connected to Cloud Database!"))
