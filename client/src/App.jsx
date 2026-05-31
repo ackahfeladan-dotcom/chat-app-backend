@@ -547,33 +547,36 @@ onClick={() => {
       }}
     />
   </label>
+{/* Container wrapper to hold them side-by-side cleanly */}
+      
+        
+        {/* Pill Message Bar with your Typing Status Logic */}
+        <input
+          type="text"
+          placeholder="Type a message..."
+          value={message}
+          className="flex-1 min-w-0 bg-[#2a3942] text-white p-2 rounded-md outline-none" // 👈 Added this layout rule!
+          onChange={(e) => {
+            setMessage(e.target.value);
+            if (e.target.value !== "") {
+              socket.emit("typing", { room: currentRoomId, username: username });
+            } else {
+              socket.emit("stop_typing", { room: currentRoomId });
+            }
+          }}
+          onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
+          onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+        />
 
-  {/* Pill Message Bar with your Typing Status Logic */}
-  <input
-    type="text"
-    placeholder="Type a message..."
-    value={message} // Make sure this matches your variable name (currentMessage or message)
-    onChange={(e) => {
-      setMessage(e.target.value);
-      if (e.target.value !== "") {
-        socket.emit("typing", { room: currentRoomId, username: username });
-      } else {
-        socket.emit("stop_typing", { room: currentRoomId });
-      }
-    }}
-    onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
-    onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-  />
+        {/* WhatsApp-Style Circular Send Button */}
+        <button className="send-btn flex-shrink-0" onClick={sendMessage}> {/* 👈 Added flex-shrink-0 here! */}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
 
-
-  {/* WhatsApp-Style Circular Send Button */}
-  <button className="send-btn" onClick={sendMessage}>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="22" y1="2" x2="11" y2="13"></line>
-      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-    </svg>
-  </button>
-</div>
+      </div>
   </>
 ) : (
   <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
