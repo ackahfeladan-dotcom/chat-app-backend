@@ -395,7 +395,7 @@ onClick={() => {
 
           
  <div className="chat-body">
-// 📑 Update your filter step at line 394 to look exactly like this:
+
 {messageList
   .filter((content) => {
     // If we are looking at the Meta AI room view
