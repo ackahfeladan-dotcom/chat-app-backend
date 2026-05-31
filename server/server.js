@@ -245,10 +245,13 @@ async function getGroqAIResponse(userQuery) {
   try {
     // This connects directly to the real Llama 3 AI model!
     const chatCompletion = await groq.chat.completions.create({
-      messages: [{ role: "user", content: userQuery }],
+      messages: [
+        { role: "user", content: userQuery }
+      ],
       model: "llama3-8b-8192",
     });
-   return chatCompletion?.choices?.[0]?.message?.content || "No response text received.";
+
+    return chatCompletion?.choices?.[0]?.message?.content || "No response text received.";
   } catch (error) {
     console.error("Groq API Error:", error);
     return "Sorry, I had trouble processing that question.";
