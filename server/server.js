@@ -248,7 +248,7 @@ async function getGroqAIResponse(userQuery) {
       messages: [
         { role: "user", content: userQuery }
       ],
-      model: "llama3-8b-8192",
+      model: "llama-3.3-70b-versatile",
     });
 
     return chatCompletion?.choices?.[0]?.message?.content || "No response text received.";
