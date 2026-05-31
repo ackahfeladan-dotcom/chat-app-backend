@@ -290,7 +290,11 @@ return (
               <div 
                 key={idx} 
                 className={`wa-thread-card-item ${activeChat === contact ? 'wa-item-selected' : ''}`} 
-                onClick={() => setActiveChat(contact)}
+                // 📑 Replace line 294 with this exact code:
+onClick={() => {
+  setActiveChat(contact);
+  setCurrentRoomId(contact); // 👈 This links your filter to the clicked contact name!
+}}
               >
                 {/* Avatar Profile Circle */}
                 <div className="wa-thread-avatar-circle">
