@@ -53,7 +53,7 @@ const ChatModel = mongoose.model("chats", ChatSchema);
 
 app.use(express.json());
 
-app.post('/add-contact', async (req, res) => {
+app.post('/add-contact', async  (req, res) => {
   try {
     const { username, contactName } = req.body;
     
@@ -248,7 +248,7 @@ async function getGroqAIResponse(userQuery) {
       messages: [{ role: "user", content: userQuery }],
       model: "llama3-8b-8192",
     });
-    return chatCompletion.choices[0].message.content;
+   return chatCompletion?.choices?.[0]?.message?.content || "No response text received.";
   } catch (error) {
     console.error("Groq API Error:", error);
     return "Sorry, I had trouble processing that question.";
