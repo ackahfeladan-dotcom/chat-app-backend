@@ -960,3 +960,33 @@ div[style*="background-color: rgb(37, 211, 102)"] {
   box-sizing: border-box !important;
   gap: 10px;
 }
+/* Force the container to behave as a row layout */
+.chat-footer, 
+div[class*="footer"], 
+form[class*="footer"] {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 10px !important;
+}
+
+/* Prevent the input container from stretching too far */
+.chat-footer input,
+div[class*="input-container"] {
+  flex: 1 !important;
+  width: auto !important; /* Overrides any hardcoded 100% width */
+  min-width: 0 !important; /* Allows flex to shrink the input box */
+  margin-right: 10px !important;
+}
+
+/* Force the button to stay visible on the screen */
+.chat-footer button,
+.send-button {
+  display: flex !important;
+  width: 42px !important;
+  height: 42px !important;
+  flex-shrink: 0 !important; /* Absolute protection against shrinking */
+}

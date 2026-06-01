@@ -548,7 +548,7 @@ onClick={() => {
     />
   </label>
 {/* Container wrapper to hold them side-by-side cleanly */}
-      
+   <div className="flex items-center w-full gap-2 p-2"></div>   
         
         {/* Pill Message Bar with your Typing Status Logic */}
         <input
@@ -567,14 +567,12 @@ onClick={() => {
           onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
           onKeyPress={(e) => e.key === "Enter" && sendMessage()}
         />
-
-        {/* WhatsApp-Style Circular Send Button */}
-        <button className="send-btn flex-shrink-0" onClick={sendMessage}> {/* 👈 Added flex-shrink-0 here! */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        </button>
+<button className="send-button flex-shrink-0" onClick={sendMessage}>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="22" y1="2" x2="11" y2="13"></line>
+    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+  </svg>
+</button>
 
       </div>
   </>
