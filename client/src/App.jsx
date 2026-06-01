@@ -548,33 +548,38 @@ onClick={() => {
     />
   </label>
 {/* Container wrapper to hold them side-by-side cleanly */}
-   <div className="chat-footer flex items-center w-full gap-2 p-2">
-        
-        {/* Pill Message Bar with your Typing Status Logic */}
-        <input
-          type="text"
-          placeholder="Type a message..."
-          value={message}
-         className="flex-1 min-w-0 bg-[#2a3942] text-white p-2 rounded-md outline-none"
-          onChange={(e) => {
-            setMessage(e.target.value);
-            if (e.target.value !== "") {
-              socket.emit("typing", { room: currentRoomId, username: username });
-            } else {
-              socket.emit("stop_typing", { room: currentRoomId });
-            }
-          }}
-          onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
-          onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-        />
-<button className="send-button flex-shrink-0" onClick={sendMessage}>
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="22" y1="2" x2="11" y2="13"></line>
-    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-  </svg>
-</button>
+<div className="flex items-center w-full max-w-full gap-3 p-3 box-border">
 
-      </div>
+  {/* Pill Message Bar */}
+  <input
+    type="text"
+    placeholder="Type a message..."
+    value={message}
+    className="flex-1 min-w-0 bg-[#2a3942] text-white p-2.5 rounded-lg outline-none"
+    onChange={(e) => {
+      setMessage(e.target.value);
+      if (e.target.value !== "") {
+        socket.emit("typing", { room: currentRoomId, username: username });
+      } else {
+        socket.emit("stop_typing", { room: currentRoomId });
+      }
+    }}
+    onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
+    onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+  />
+
+  {/* Bright visible blue send button */}
+  <button 
+    className="flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white rounded-full w-10 h-10 flex-shrink-0 transition-colors" 
+    onClick={sendMessage}
+  >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="22" y1="2" x2="11" y2="13"></line>
+      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+    </svg>
+  </button>
+
+</div>
       </div>
   </>
 ) : (
