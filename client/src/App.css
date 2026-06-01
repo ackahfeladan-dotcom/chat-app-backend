@@ -518,7 +518,7 @@ html, body {
   .users-list,
   .chat-window {
     width: 100vw !important;
-    height: 100vh !important;
+    height: 100dvh !important;
     display: flex !important;
     flex-direction: column !important;
   }
@@ -951,4 +951,12 @@ span[className*="unread"],
 div[style*="background-color: rgb(37, 211, 102)"] {
   background-color: #3b82f6 !important; /* Updates the small unread circle badge to match theme blue */
   color: #ffffff !important;
+}
+.chat-footer {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  gap: 10px;
 }
