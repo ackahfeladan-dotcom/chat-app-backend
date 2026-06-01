@@ -403,7 +403,7 @@ onClick={() => {
   </div>
 
           
- <div className="chat-body">
+ <div className="chat-body flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
 
 {messageList
   .filter((content) => {
@@ -547,15 +547,20 @@ onClick={() => {
       }}
     />
   </label>
-{/* Container wrapper to hold them side-by-side cleanly */}
-<div className="flex items-center w-full max-w-full gap-3 p-3 box-border">
+{/* Strict row container forcing everything on a single line */}
+<div className="flex items-center w-full gap-2 p-2 bg-[#1f2c34] border-t border-[#222e35] box-border shrink-0">
+  
+  {/* The paperclip wrapper icon (if you have one, or keep your icon code here) */}
+  <div className="flex items-center text-[#8696a0] px-1">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+  </div>
 
-  {/* Pill Message Bar */}
+  {/* Input bar that auto-shrinks to fit whatever space is left */}
   <input
     type="text"
     placeholder="Type a message..."
     value={message}
-    className="flex-1 min-w-0 bg-[#2a3942] text-white p-2.5 rounded-lg outline-none"
+    className="flex-1 min-w-0 bg-[#2a3942] text-white py-2 px-3 rounded-lg outline-none text-sm"
     onChange={(e) => {
       setMessage(e.target.value);
       if (e.target.value !== "") {
@@ -568,12 +573,12 @@ onClick={() => {
     onKeyPress={(e) => e.key === "Enter" && sendMessage()}
   />
 
-  {/* Bright visible blue send button */}
+  {/* Perfectly aligned circle send button directly attached to the right */}
   <button 
-    className="flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white rounded-full w-10 h-10 flex-shrink-0 transition-colors" 
+    className="flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white rounded-full w-9 h-9 shrink-0 transition-colors" 
     onClick={sendMessage}
   >
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transform rotate-45 -translate-x-0.5 translate-y-0.5">
       <line x1="22" y1="2" x2="11" y2="13"></line>
       <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
     </svg>
