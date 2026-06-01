@@ -548,14 +548,14 @@ onClick={() => {
     />
   </label>
 {/* Container wrapper to hold them side-by-side cleanly */}
-   <div className="flex items-center w-full gap-2 p-2">
+   <div className="chat-footer flex items-center w-full gap-2 p-2">
         
         {/* Pill Message Bar with your Typing Status Logic */}
         <input
           type="text"
           placeholder="Type a message..."
           value={message}
-          className="flex-1 min-w-0 bg-[#2a3942] text-white p-2 rounded-md outline-none" // 👈 Added this layout rule!
+          className="grow w-full bg-[#2a3942] text-white p-2 rounded-md outline-none"
           onChange={(e) => {
             setMessage(e.target.value);
             if (e.target.value !== "") {
