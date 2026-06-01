@@ -548,7 +548,7 @@ onClick={() => {
     />
   </label>
 {/* Container wrapper to hold them side-by-side cleanly */}
-   <div className="flex items-center w-full gap-2 p-2"></div>   
+   <div className="flex items-center w-full gap-2 p-2">
         
         {/* Pill Message Bar with your Typing Status Logic */}
         <input
@@ -574,6 +574,7 @@ onClick={() => {
   </svg>
 </button>
 
+      </div>
       </div>
   </>
 ) : (
