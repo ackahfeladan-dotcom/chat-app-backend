@@ -555,7 +555,7 @@ onClick={() => {
           type="text"
           placeholder="Type a message..."
           value={message}
-          className="grow w-full bg-[#2a3942] text-white p-2 rounded-md outline-none"
+         className="flex-1 min-w-0 bg-[#2a3942] text-white p-2 rounded-md outline-none"
           onChange={(e) => {
             setMessage(e.target.value);
             if (e.target.value !== "") {
