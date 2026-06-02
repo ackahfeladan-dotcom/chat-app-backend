@@ -514,14 +514,21 @@ html, body {
     display: none !important;
   }
 
-  /* Force active screen containers to occupy full screen width on phones */
-  .users-list,
-  .chat-window {
-    width: 100vw !important;
-    height: 100dvh !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
+ /* PASTE THIS INSTEAD: */
+.users-list {
+  width: 320px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-window {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
   /* Style the mobile navigation back arrow button */
   .mobile-back-btn {
@@ -959,4 +966,73 @@ div[style*="background-color: rgb(37, 211, 102)"] {
   width: 100% !important;
   box-sizing: border-box !important;
   gap: 10px;
+}
+/* Fixed Desktop Main Layout Configurations */
+@media (min-width: 769px) {
+  .chat-container, 
+  div[class*="main-container"] {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+
+  .users-list {
+    width: 320px !important;
+    min-width: 320px !important;
+    height: 100% !important;
+    flex-shrink: 0 !important;
+  }
+
+  .chat-window {
+    flex: 1 !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: auto !important;
+  }
+}
+/* Desktop Dashboard Layout Control Override */
+@media (min-width: 769px) {
+  .App.has-active-chat {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+
+  .users-list {
+    width: 320px !important;
+    min-width: 320px !important;
+    height: 100% !important;
+    flex-shrink: 0 !important;
+  }
+
+  .chat-window {
+    flex: 1 !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+}
+
+/* Mobile Screen Recovery Override (Fixes Blank Phone Screen) */
+@media (max-width: 768px) {
+  .App {
+    width: 100% !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+  
+  .login-container {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
 }

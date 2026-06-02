@@ -514,68 +514,134 @@ onClick={() => {
       {typingStatus}
     </div>
   )}
-<div className="chat-footer">
-  {/* Modern Attachment Upload Icon */}
-  <label className="attachment-btn" style={{ cursor: 'pointer', margin: 0 }}>
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-    </svg>
-    <input
-      type="file"
-      accept="image/*"
-      style={{ display: 'none' }}
-      onChange={async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+{/* Main Chat Panel Window Wrapper */}
+<div style={{
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100dvh',
+  backgroundColor: '#111b21',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
+  flex: 1,
+  minWidth: '0'
+}}>
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "chat_app_preset");
+  {/* Chat Area/Messages Section */}
+  <div style={{
+    flex: 1,
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    width: '100%',
+    padding: '10px',
+    boxSizing: 'border-box'
+  }}>
+    {/* Keep your existing message-mapping array map code loop here */}
+  </div>
 
-        try {
-          const res = await fetch("https://api.cloudinary.com/v1_1/dxk6jsrpc/image/upload", {
-            method: "POST",
-            body: formData
-          });
-          const data = await res.json();
-          if (data.secure_url) {
-            setMessage(data.secure_url);
+  {/* Main Horizontal Bottom Input Bar Container Row */}
+  <div style={{
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    gap: '12px',
+    padding: '12px 16px',
+    backgroundColor: '#1f2c34',
+    borderTop: '1px solid #222e35',
+    boxSizing: 'border-box',
+    flexShrink: 0
+  }}>
+    
+    {/* Modern Attachment Upload Icon Trigger */}
+    <label style={{ cursor: 'pointer', margin: 0, display: 'flex', alignItems: 'center', color: '#8696a0', flexShrink: 0 }}>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+      </svg>
+      <input
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={async (e) => {
+          const file = e.target.files;
+          if (!file) return;
+
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", "chat_app_preset");
+
+          try {
+            const res = await fetch("https://api.cloudinary.com/v1_1/dxk6jsrpc/image/upload", {
+              method: "POST",
+              body: formData
+            });
+            const data = await res.json();
+            if (data.secure_url) {
+              setMessage(data.secure_url);
+            }
+          } catch (err) {
+            console.error("Upload failed:", err);
           }
-        } catch (err) {
-          console.error("Upload failed:", err);
+        }}
+      />
+    </label>
+
+    {/* Sleek, Full-Width Chat Message Input Field */}
+    <input
+      type="text"
+      placeholder="Type a message..."
+      value={message}
+      style={{
+        flexGrow: 1,
+        minWidth: 0,
+        backgroundColor: '#2a3942',
+        color: '#ffffff',
+        padding: '12px 16px',
+        borderRadius: '8px',
+        border: 'none',
+        outline: 'none',
+        fontSize: '15px',
+        fontFamily: 'inherit',
+        boxSizing: 'border-box'
+      }}
+      onChange={(e) => {
+        setMessage(e.target.value);
+        if (e.target.value !== "") {
+          socket.emit("typing", { room: currentRoomId, username: username });
+        } else {
+          socket.emit("stop_typing", { room: currentRoomId });
         }
       }}
+      onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
+      onKeyPress={(e) => e.key === "Enter" && sendMessage()}
     />
-  </label>
-<div className="flex flex-row items-center w-full gap-2 p-2 bg-[#1f2c34] border-t border-[#222e35] box-border shrink-0">
-  <input
-    type="text"
-    placeholder="Type a message..."
-    value={message}
-    className="flex-1 min-w-0 bg-[#2a3942] text-white py-2 px-3 rounded-lg outline-none text-sm"
-    onChange={(e) => {
-      setMessage(e.target.value);
-      if (e.target.value !== "") {
-        socket.emit("typing", { room: currentRoomId, username: username });
-      } else {
-        socket.emit("stop_typing", { room: currentRoomId });
-      }
-    }}
-    onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
-    onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-  />
 
-  <button
-    className="flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white rounded-full w-9 h-9 shrink-0"
-    onClick={sendMessage}
-  >
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-      <line x1="22" y1="2" x2="11" y2="13"></line>
-      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-    </svg>
-  </button>
+    {/* Premium Blue Send Message Button */}
+    <button
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#0084ff',
+        color: '#ffffff',
+        border: 'none',
+        borderRadius: '50%',
+        width: '42px',
+        height: '42px',
+        cursor: 'pointer',
+        flexShrink: 0,
+        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+      }}
+      onClick={sendMessage}
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginLeft: '2px' }}>
+        <line x1="22" y1="2" x2="11" y2="13"></line>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+      </svg>
+    </button>
+
+  </div>
 </div>
-      </div>
+      
   </>
 ) : (
   <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
