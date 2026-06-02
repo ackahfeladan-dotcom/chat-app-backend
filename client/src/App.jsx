@@ -25,11 +25,12 @@ const handleSearchSubmit = () => {
   const [currentRoomId, setCurrentRoomId] =useState("Meta AI"); // Default to Meta AI chat on login
   const messagesEndRef = useRef(null);
   const [typingStatus, setTypingStatus] = useState("");
-  const [setOnlineList] = useState([]);
+  const [onlineList, setOnlineList] = useState([]);
   const [activeChat, setActiveChat] = useState(null);
   const [activeTab, setActiveTab] = useState('chats'); // Tracks active bottom navigation tab
   const [searchQuery, setSearchQuery] = useState(''); // Handles list filtering query
 
+  console.log(onlineList)
   // --- UNIVERSAL PROFILE STATES ---
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [myUniversalProfile, setMyUniversalProfile] = useState(() => {
@@ -91,12 +92,19 @@ useEffect(() => {
       );
     };
 
-    // Attach all live listeners safely
-    socket.on("chat_joined", handleChatJoined);
-    socket.on("meta_ai_response", handleMetaAIResponse);
-    socket.on("receive_message", handleReceiveMessage);
-    socket.on("receive_reaction", handleReceiveReaction);
-
+ // Replace lines 95-98 with this:
+socket.on("chat_joined", (data) => {
+    if (typeof handleChatJoined === 'function') handleChatJoined(data);
+});
+socket.on("meta_ai_response", (data) => {
+    if (typeof handleMetaAIResponse === 'function') handleMetaAIResponse(data);
+});
+socket.on("receive_message", (data) => {
+    if (typeof handleReceiveMessage === 'function') handleReceiveMessage(data);
+});
+socket.on("receive_reaction", (data) => {
+    if (typeof handleReceiveReaction === 'function') handleReceiveReaction(data);
+});
     // 5. Keep your auto-scroll helper running smoothly whenever messages load
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 
@@ -389,7 +397,7 @@ onClick={() => {
 
 
     {/* MAIN CHAT SCREEN AREA */}
-   <div className={`chat-window flex flex-col h-[calc(100vh-60px)] md:h-full w-full min-h-0 overflow-hidden ${activeChat ? 'hide-on-mobile' : ''}`}>
+  <div className={`chat-window flex flex-col h-[100dvh] md:h-full w-full min-h-0 overflow-hidden ${activeChat ? 'block' : 'hidden'}`}>
  {activeChat ? (
   <>
   <div className="sidebar-header" style={{ padding: '16px 24px', background: 'var(--...', display: 'flex', alignItems: 'center', gap: '12px' }}>
