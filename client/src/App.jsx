@@ -547,15 +547,7 @@ onClick={() => {
       }}
     />
   </label>
-{/* Strict single-line row container forcing everything to sit side-by-side */}
 <div className="flex flex-row items-center w-full gap-2 p-2 bg-[#1f2c34] border-t border-[#222e35] box-border shrink-0">
-  
-  {/* The paperclip icon wrapper */}
-  <div className="flex items-center text-[#8696a0] px-1 shrink-0">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-  </div>
-
-  {/* Input bar that dynamically scales to fill the middle space */}
   <input
     type="text"
     placeholder="Type a message..."
@@ -573,17 +565,15 @@ onClick={() => {
     onKeyPress={(e) => e.key === "Enter" && sendMessage()}
   />
 
-  {/* Styled circular blue send button locked right next to the text container */}
-  <button 
-    className="flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white rounded-full w-9 h-9 shrink-0 transition-colors" 
+  <button
+    className="flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white rounded-full w-9 h-9 shrink-0"
     onClick={sendMessage}
   >
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transform rotate-45 -translate-x-0.5 translate-y-0.5">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
       <line x1="22" y1="2" x2="11" y2="13"></line>
       <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
     </svg>
   </button>
-
 </div>
       </div>
   </>
