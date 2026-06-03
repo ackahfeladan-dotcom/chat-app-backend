@@ -20,7 +20,7 @@
   /* Crisp Typography & Clean Lines */
   --text-main: #f8fafc;         /* Pure crisp off-white for perfect reading view */
   --text-muted: #94a3b8;        /* Soft low-contrast ash gray for time and meta labels */
-  --border-color: #232834;      /* Ultra-thin professional slate divider borders */
+  --border-color: #0f1115; /* Matches your --bg-main and --bg-chat */
 
   /* Modern Professional Chat Bubbles */
   --bubble-me: #3b82f6;         /* Outgoing message: Electric Corporate Blue bubble */
@@ -249,7 +249,7 @@ html, body {
 .chat-body {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 20px;
@@ -630,6 +630,8 @@ html, body {
   display: flex;
   flex-direction: column;
   position: relative;
+  height: 100vh; /* Force the viewport wrapper to lock to screen height */
+  max-height: 100vh;
 }
 
 /* 2. Unified Pill Search Field Row */
@@ -853,148 +855,10 @@ html, body {
   padding: 1px 5px;
 }
 
-/* ==========================================
-   RESPONSIVE DESIGN BREAKPOINT LOGIC HANDLERS
-   ========================================== */
+/* 1. Close any accidentally open bracket first */
 
-/* LAPTOP & COMPUTER LAYOUT RULES (Side-by-Side Panels) */
-@media (min-width: 769px) {
-  .wa-sidebar-master {
-    width: 30% !important;
-    min-width: 350px !important;
-    max-width: 450px !important;
-  }
-}
 
-/* PHONE SMARTPHONE VIEWPORT RULES (Screen Swapping Stack Mode) */
-@media (max-width: 768px) {
-  .wa-sidebar-master {
-    width: 100vw !important;
-    max-width: 100vw !important;
-  }
-  
-  .wa-sidebar-master.hide-on-mobile {
-    display: none !important;
-  }
-}
-/* Mobile Responsive Screen Splitting Switcher */
-@media (max-width: 768px) {
-  /* When NO active chat is selected, hide the conversation window completely */
-  .App:not(.has-active-chat) .wa-chat-window-container,
-  .App:not(.has-active-chat) .message-panel-container,
-  .App:not(.has-active-chat) .wa-message-input-footer-dock {
-    display: none !important;
-  }
-
-  /* When an active chat IS selected, hide the thread list feed and top profile selectors */
-  .App.has-active-chat .wa-sidebar-master,
-  .App.has-active-chat .wa-threads-scrollable-feed,
-  .App.has-active-chat .wa-fixed-bottom-nav-dock {
-    display: none !important;
-  }
-  
-  /* Make the chat window take up the full safe screen view area */
-  .wa-chat-window-container, .message-panel-container {
-    height: 100dvh !important;
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-  }
-}
-@media (max-width: 768px) {
-  /* Hide the chat panel if no contact is selected */
-  .App:not(.has-active-chat) .chat-window {
-    display: none !important;
-  }
-
-  /* Hide the contact sidebar panel if a chat IS selected */
-  .App.has-active-chat .wa-sidebar-master,
-  .App.has-active-chat .wa-threads-scrollable-feed,
-  .App.has-active-chat .wa-fixed-bottom-nav-dock {
-    display: none !important;
-  }
-}
-/* --- PREMIUM PUBLIC LAYOUT THEME OVERRIDES --- */
-
-/* 1. Main Left Sidebar Background (Forces transition from green-tint to deep luxury dark slate) */
-.wa-sidebar-master, 
-div[className*="wa-sidebar-master"] {
-  background-color: #131722 !important; /* Deep luxury tech background */
-}
-
-/* 2. Top App Bar Brand Header Panel */
-.wa-top-brand-header {
-  background-color: #1c2030 !important; /* Polished header tint */
-  border-bottom: 1px solid #2a2f45 !important;
-}
-
-/* 3. Global App Branding Title Text (eMa) */
-.wa-brand-title {
-  color: #3b82f6 !important; /* Eye-catching premium corporate electric blue */
-  font-size: 24px !important;
-  font-weight: 800 !important;
-}
-
-/* 4. Meta Search Input Area & Add New User Entry Box */
-.wa-search-bar-input,
-.wa-add-user-input-box,
-input[placeholder*="Ask Meta AI"],
-input[placeholder*="Add new user"] {
-  background-color: #1e2235 !important; /* High-contrast clean dark inputs */
-  border: 1px solid #2a2f45 !important;
-  color: #ffffff !important;
-}
-
-/* 5. Circular Action Plus Trigger Button */
-.wa-floating-action-trigger-btn {
-  background-color: #3b82f6 !important; /* Removes green, swaps to striking Electric Blue */
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4) !important; /* Adds a premium glow */
-}
-
-/* 6. Contact Row Unread Message Badge Indicator */
-span[className*="unread"], 
-.unread-badge,
-div[style*="background-color: rgb(37, 211, 102)"] {
-  background-color: #3b82f6 !important; /* Updates the small unread circle badge to match theme blue */
-  color: #ffffff !important;
-}
-.chat-footer {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  gap: 10px;
-}
-/* Fixed Desktop Main Layout Configurations */
-@media (min-width: 769px) {
-  .chat-container, 
-  div[class*="main-container"] {
-    display: flex !important;
-    flex-direction: row !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    overflow: hidden !important;
-  }
-
-  .users-list {
-    width: 320px !important;
-    min-width: 320px !important;
-    height: 100% !important;
-    flex-shrink: 0 !important;
-  }
-
-  .chat-window {
-    flex: 1 !important;
-    min-width: 0 !important;
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    width: auto !important;
-  }
-}
-/* Desktop Dashboard Layout Control Override */
+/* 2. Clear Desktop Dashboard Layout Control Override */
 @media (min-width: 769px) {
   .App.has-active-chat {
     display: flex !important;
@@ -1009,30 +873,28 @@ div[style*="background-color: rgb(37, 211, 102)"] {
     min-width: 320px !important;
     height: 100% !important;
     flex-shrink: 0 !important;
+    display: flex !important; /* Make sure sidebar stays visible */
   }
 
   .chat-window {
     flex: 1 !important;
     min-width: 0 !important;
     height: 100% !important;
-    display: flex !important;
+    display: flex !important; /* FORCE the chat window to be visible */
     flex-direction: column !important;
   }
 }
-
-/* Mobile Screen Recovery Override (Fixes Blank Phone Screen) */
-@media (max-width: 768px) {
-  .App {
-    width: 100% !important;
-    height: 100vh !important;
-    overflow: hidden !important;
-  }
-  
-  .login-container {
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-  }
+/* Forcefully remove any borders using your theme color */
+div, section, main, [class*="chat"], [class*="container"] {
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+/* Force-clear layout borders on the chat wrappers */
+.wa-tab-viewport-content, 
+.wa-search-bar-wrapper,
+[class*="chat"], 
+[class*="messages"] {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }

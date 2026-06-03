@@ -92,7 +92,7 @@ useEffect(() => {
       );
     };
 
- // Replace lines 95-98 with this:
+ 
 socket.on("chat_joined", (data) => {
     if (typeof handleChatJoined === 'function') handleChatJoined(data);
 });
@@ -110,10 +110,10 @@ socket.on("receive_reaction", (data) => {
 
     // 6. Complete cleanup function to prevent memory leaks and layout bugs
     return () => {
-      socket.off("chat_joined", handleChatJoined);
-      socket.off("meta_ai_response", handleMetaAIResponse);
-      socket.off("receive_message", handleReceiveMessage);
-      socket.off("receive_reaction", handleReceiveReaction);
+  socket.off("chat_joined");
+socket.off("meta_ai_response");
+socket.off("receive_message");
+socket.off("receive_reaction");
     };
   }, []);
 const handleAddContact = async () => {
@@ -304,15 +304,14 @@ return (
           {contacts
             .filter(contact => contact.toLowerCase().includes(searchQuery.toLowerCase()))
             .map((contact, idx) => (
-              <div 
-                key={idx} 
-                className={`wa-thread-card-item ${activeChat === contact ? 'wa-item-selected' : ''}`} 
-                // 📑 Replace line 294 with this exact code:
-onClick={() => {
-  setActiveChat(contact);
-  setCurrentRoomId(contact); // 👈 This links your filter to the clicked contact name!
-}}
-              >
+       <div
+      key={idx}
+      className={`wa-thread-card-item ${activeChat === contact ? 'wa-item-selected' : ''}`}
+      onClick={() => {
+        setActiveChat(contact);
+        setCurrentRoomId(contact); 
+            }}
+           >
                 {/* Avatar Profile Circle */}
                 <div className="wa-thread-avatar-circle">
                   {contact.charAt(0).toUpperCase()}
@@ -339,7 +338,7 @@ onClick={() => {
     type="text" 
     placeholder="Add new user..." 
     value={contactInput} 
-    onChange={(e) => setContactInput(e.target.value.toLowerCase().trim())}
+    onChange={(e) => setContactInput(e.target.value)}
     className="wa-add-user-input-box"
   />
   <button className="wa-floating-action-trigger-btn" onClick={handleAddContact} title="Add User">
@@ -397,9 +396,9 @@ onClick={() => {
 
 
     {/* MAIN CHAT SCREEN AREA */}
-  <div className={`chat-window flex flex-col h-[100dvh] md:h-full w-full min-h-0 overflow-hidden ${activeChat ? 'block' : 'hidden'}`}>
- {activeChat ? (
-  <>
+ <div className="chat-window flex flex-col h-full w-full min-h-0 overflow-hidden">
+    {activeChat ? (
+        <>
   <div className="sidebar-header" style={{ padding: '16px 24px', background: 'var(--...', display: 'flex', alignItems: 'center', gap: '12px' }}>
     {/* 👇 THIS IS YOUR NEW MOBILE BACK BUTTON */}
   <button className="mobile-back-btn" onClick={() => setActiveChat(null)}>
@@ -412,6 +411,7 @@ onClick={() => {
 
           
  <div className="chat-body flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
+  {console.log("Current Messages Data:", messageList, "Current Room:", currentRoomId, "Active Chat:", activeChat)}
 
 {messageList
   .filter((content) => {
@@ -526,7 +526,7 @@ onClick={() => {
 <div style={{
   display: 'flex',
   flexDirection: 'column',
-  height: '100dvh',
+  height: '100%',
   backgroundColor: '#111b21',
   boxSizing: 'border-box',
   overflow: 'hidden',
@@ -548,17 +548,18 @@ onClick={() => {
 
   {/* Main Horizontal Bottom Input Bar Container Row */}
   <div style={{
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    gap: '12px',
-    padding: '12px 16px',
-    backgroundColor: '#1f2c34',
-    borderTop: '1px solid #222e35',
-    boxSizing: 'border-box',
-    flexShrink: 0
-  }}>
+ /* Update the style block starting at Line 551 to read exactly like this: */
+display: 'flex',
+flexDirection: 'row',
+alignItems: 'center',
+width: '100%',
+flexShrink: 0,                /* FIX: Locks the bar height so it cannot slide away */
+gap: '12px',
+padding: '12px 16px',
+backgroundColor: '#1f2c34',
+borderTop: 'none',            /* FIX: Completely removes the tiny gray line */
+boxSizing: 'border-box',
+}}>
     
     {/* Modern Attachment Upload Icon Trigger */}
     <label style={{ cursor: 'pointer', margin: 0, display: 'flex', alignItems: 'center', color: '#8696a0', flexShrink: 0 }}>
